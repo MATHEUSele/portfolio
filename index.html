@@ -693,8 +693,10 @@
     <a href="#" class="logo">M<span>.</span>ELEOTERIO</a>
     <nav>
         <a href="#sobre" class="hover-target" data-i18n="nav.about">About</a>
+        <a href="#tecnologias" class="hover-target" data-i18n="nav.tech">Technologies</a>
         <a href="#projetos" class="hover-target" data-i18n="nav.projects">Projects</a>
         <a href="#skills" class="hover-target" data-i18n="nav.skills">Skills</a>
+        <a href="#curriculo" class="hover-target" data-i18n="nav.curriculum">Curriculum</a>
     </nav>
     <div class="header-actions">
         <button id="lang-toggle" class="btn-lang hover-target" onclick="toggleLanguage()">PT</button>
@@ -713,8 +715,10 @@
 <!-- Mobile Navigation Drawer -->
 <nav class="mobile-nav" id="mobileNav">
     <a href="#sobre" onclick="toggleMobileNav()" data-i18n="nav.about">About</a>
+    <a href="#tecnologias" onclick="toggleMobileNav()" data-i18n="nav.tech">Technologies</a>
     <a href="#projetos" onclick="toggleMobileNav()" data-i18n="nav.projects">Projects</a>
     <a href="#skills" onclick="toggleMobileNav()" data-i18n="nav.skills">Skills</a>
+    <a href="#curriculo" onclick="toggleMobileNav()" data-i18n="nav.curriculum">Curriculum</a>
     <button class="mobile-contact-btn" onclick="toggleMobileNav(); toggleModal();" data-i18n="nav.contact">Contact</button>
 </nav>
 
@@ -819,6 +823,44 @@
     </div>
 </section>
 
+<section id="tecnologias" class="chapter" style="background: var(--grafite-medio);">
+    <div class="container">
+        <h2 class="section-title reveal" data-i18n="tech.title">My <span>Technologies</span></h2>
+        <p style="text-align: center; color: #94a3b8; margin-bottom: 50px; font-size: 1.1rem; max-width: 700px; margin-left: auto; margin-right: auto;" class="reveal" data-i18n="tech.desc">Tools and platforms I master to build robust automation and data solutions.</p>
+        
+        <div class="projetos-grid">
+            <div class="projeto-card reveal">
+                <div style="display: flex; align-items: center; margin-bottom: 15px; gap: 15px;">
+                    <!-- Placeholder SVG for n8n -->
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="100" rx="20" fill="#FF6D5A"/>
+                        <path d="M35 65V35L65 50L35 65Z" fill="white"/>
+                    </svg>
+                    <div>
+                        <h3 style="margin-bottom: 5px;">n8n</h3>
+                        <span style="background: rgba(255, 109, 90, 0.1); color: #FF6D5A; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">Workflow Automation</span>
+                    </div>
+                </div>
+                <p data-i18n="tech.n8n.desc">Advanced workflow automation tool. I use it to integrate APIs, databases, and AI models seamlessly, building scalable data pipelines and business process automations without extensive boilerplate code.</p>
+            </div>
+            <!-- More technologies can be added here -->
+        </div>
+    </div>
+</section>
+
+<section id="curriculo" class="chapter">
+    <div class="container" style="text-align: center;">
+        <h2 class="section-title reveal" data-i18n="cv.title">My <span>Curriculum</span></h2>
+        <p style="color: #94a3b8; margin-bottom: 40px; font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto;" class="reveal" data-i18n="cv.desc">Download my updated curriculum to see my full trajectory, academic background, and professional experiences.</p>
+        <div class="reveal">
+            <a href="certificados/curriculo.pdf" target="_blank" class="btn-primary hover-target" style="display: inline-flex; align-items: center; gap: 10px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span data-i18n="cv.btn">Download Curriculum (PDF)</span>
+            </a>
+        </div>
+    </div>
+</section>
+
 <section id="projetos" class="chapter">
     <div class="container">
         <h2 class="section-title reveal" data-i18n="projects.title">Featured <span>Projects</span></h2>
@@ -880,8 +922,10 @@
     const translations = {
         en: {
             "nav.about": "About",
+            "nav.tech": "Technologies",
             "nav.projects": "Projects",
             "nav.skills": "Skills",
+            "nav.curriculum": "Curriculum",
             "nav.contact": "Contact",
             "hero.title": "AI Developer & <br>Automation Specialist",
             "hero.desc": "Developing AI agents, automating workflows and creating solutions that transform <span class='hero-accent'>complex tasks into efficient processes</span>.",
@@ -913,12 +957,20 @@
             "certs.desc3": "Participation in innovation events, staying up-to-date with the latest tech and AI market trends.",
             "certs.desc4": "Practical enhancement in modern development tools, expanding the technological arsenal to create more efficient automations.",
             "certs.desc5": "Demonstrates continuous engagement in academic and professional activities that enrich logical thinking and problem-solving.",
+            "tech.title": "My <span>Technologies</span>",
+            "tech.desc": "Tools and platforms I master to build robust automation and data solutions.",
+            "tech.n8n.desc": "Advanced workflow automation tool. I use it to integrate APIs, databases, and AI models seamlessly, building scalable data pipelines and business process automations without extensive boilerplate code.",
+            "cv.title": "My <span>Curriculum</span>",
+            "cv.desc": "Download my updated curriculum to see my full trajectory, academic background, and professional experiences.",
+            "cv.btn": "Download Curriculum (PDF)",
             "footer.text": "© 2026 - Matheus E. L. Eleoterio • \"Transforming data and processes into decisions.\""
         },
         pt: {
             "nav.about": "Sobre",
+            "nav.tech": "Tecnologias",
             "nav.projects": "Projetos",
             "nav.skills": "Habilidades",
+            "nav.curriculum": "Currículo",
             "nav.contact": "Contato",
             "hero.title": "AI Developer & <br>Automation Specialist",
             "hero.desc": "Desenvolvendo agentes de IA, automatizando fluxos de trabalho e criando soluções que transformam <span class='hero-accent'>tarefas complexas em processos eficientes</span>.",
@@ -950,6 +1002,12 @@
             "certs.desc3": "Participação em eventos de inovação, mantendo-me atualizado com as tendências mais recentes do mercado de tecnologia e IA.",
             "certs.desc4": "Aprimoramento prático em ferramentas modernas de desenvolvimento, expandindo o arsenal tecnológico para criar automações mais eficientes.",
             "certs.desc5": "Comprova o engajamento contínuo em atividades acadêmicas e profissionais que enriquecem o pensamento lógico e a resolução de problemas.",
+            "tech.title": "Minhas <span>Tecnologias</span>",
+            "tech.desc": "Ferramentas e plataformas que domino para construir soluções robustas de dados e automação.",
+            "tech.n8n.desc": "Ferramenta avançada de automação de fluxos de trabalho. Utilizo para integrar APIs, bancos de dados e modelos de IA de forma contínua, construindo pipelines de dados escaláveis e automações de processos sem excesso de código.",
+            "cv.title": "Meu <span>Currículo</span>",
+            "cv.desc": "Baixe meu currículo atualizado para ver minha trajetória completa, formação acadêmica e experiências profissionais.",
+            "cv.btn": "Baixar Currículo (PDF)",
             "footer.text": "© 2026 - Matheus E. L. Eleoterio • \"Transformando dados e processos em decisões.\""
         }
     };
