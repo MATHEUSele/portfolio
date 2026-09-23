@@ -545,11 +545,143 @@
             border-top: 1px solid rgba(255,255,255,0.05);
         }
 
+        /* Particle Canvas */
+        #particles-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Hamburger Button */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            cursor: pointer;
+            gap: 5px;
+            transition: border-color 0.3s;
+            z-index: 1100;
+        }
+
+        .hamburger:hover {
+            border-color: var(--verde-limao);
+        }
+
+        .hamburger span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--branco-gelo);
+            border-radius: 2px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Mobile Nav Drawer */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(18, 18, 18, 0.97);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(163, 230, 53, 0.2);
+            z-index: 1050;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 60px 40px;
+            gap: 10px;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mobile-nav.open {
+            transform: translateX(0);
+        }
+
+        .mobile-nav a {
+            color: var(--branco-gelo);
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: 'Cabinet Grotesk', sans-serif;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            width: 100%;
+            transition: color 0.2s, padding-left 0.2s;
+        }
+
+        .mobile-nav a:hover {
+            color: var(--verde-limao);
+            padding-left: 8px;
+        }
+
+        .mobile-nav .mobile-contact-btn {
+            margin-top: 20px;
+            background: var(--verde-limao);
+            color: var(--grafite-escuro);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter Tight', sans-serif;
+            width: 100%;
+            transition: opacity 0.2s;
+        }
+
+        .mobile-nav .mobile-contact-btn:hover { opacity: 0.85; }
+
+        /* Overlay for mobile nav */
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1040;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .mobile-nav-overlay.open {
+            opacity: 1;
+        }
+
         @media (max-width: 768px) {
-            #hero h1 { font-size: 3rem; }
+            #hero h1 { font-size: 2.8rem; }
             .sobre-grid { grid-template-columns: 1fr; }
-            header { padding: 20px; }
-            nav { display: none; } 
+            header { padding: 15px 20px; }
+            nav { display: none; }
+            .hamburger { display: flex; }
+            .mobile-nav { display: flex; }
+            .mobile-nav-overlay { display: block; }
+            .btn-contato { display: none; }
+            .btn-lang { display: none; }
         }
     </style>
 </head>
@@ -567,8 +699,24 @@
     <div class="header-actions">
         <button id="lang-toggle" class="btn-lang hover-target" onclick="toggleLanguage()">PT</button>
         <button class="btn-contato hover-target" onclick="toggleModal()" data-i18n="nav.contact">Contact</button>
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu" onclick="toggleMobileNav()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </div>
 </header>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileNav()"></div>
+
+<!-- Mobile Navigation Drawer -->
+<nav class="mobile-nav" id="mobileNav">
+    <a href="#sobre" onclick="toggleMobileNav()" data-i18n="nav.about">About</a>
+    <a href="#projetos" onclick="toggleMobileNav()" data-i18n="nav.projects">Projects</a>
+    <a href="#skills" onclick="toggleMobileNav()" data-i18n="nav.skills">Skills</a>
+    <button class="mobile-contact-btn" onclick="toggleMobileNav(); toggleModal();" data-i18n="nav.contact">Contact</button>
+</nav>
 
 <section id="hero" class="chapter">
     <!-- Slot para a animação em vídeo -->
@@ -576,6 +724,9 @@
         <source src="images/bg-video.mp4" type="video/mp4">
         Seu navegador não suporta vídeos HTML5.
     </video>
+
+    <!-- Canvas de Partículas -->
+    <canvas id="particles-canvas"></canvas>
     
     <!-- Camada de Gradiente para transição integrada -->
     <div class="hero-overlay"></div>
@@ -878,6 +1029,101 @@
         const modal = document.getElementById('contactModal');
         modal.classList.toggle('active');
     }
+
+    // 5. Mobile Nav Toggle
+    function toggleMobileNav() {
+        const nav = document.getElementById('mobileNav');
+        const overlay = document.getElementById('mobileNavOverlay');
+        const hamburger = document.getElementById('hamburger');
+        nav.classList.toggle('open');
+        overlay.classList.toggle('open');
+        hamburger.classList.toggle('open');
+        document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
+    }
+
+    // 6. Particles Canvas
+    (function() {
+        const canvas = document.getElementById('particles-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        const PARTICLE_COUNT = 90;
+
+        function resize() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+
+        function randomBetween(a, b) {
+            return a + Math.random() * (b - a);
+        }
+
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: randomBetween(0.5, 2.2),
+                alpha: randomBetween(0.1, 0.7),
+                speedX: randomBetween(-0.18, 0.18),
+                speedY: randomBetween(-0.25, -0.05),
+                // Some particles are neon green, rest are white/blue-ish
+                color: Math.random() < 0.12
+                    ? `rgba(163,230,53,${ randomBetween(0.4, 0.9).toFixed(2) })`
+                    : `rgba(255,255,255,${ randomBetween(0.08, 0.5).toFixed(2) })`,
+                twinkleSpeed: randomBetween(0.005, 0.02),
+                twinkleDir: 1,
+            };
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(createParticle());
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                // Twinkle effect
+                p.alpha += p.twinkleSpeed * p.twinkleDir;
+                if (p.alpha >= 0.8 || p.alpha <= 0.05) p.twinkleDir *= -1;
+
+                // Move
+                p.x += p.speedX;
+                p.y += p.speedY;
+
+                // Wrap around
+                if (p.y < -5) p.y = canvas.height + 5;
+                if (p.x < -5) p.x = canvas.width + 5;
+                if (p.x > canvas.width + 5) p.x = -5;
+
+                // Draw particle (glow for green ones)
+                ctx.save();
+                if (p.color.includes('163,230,53')) {
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = 'rgba(163,230,53,0.6)';
+                }
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
+                ctx.fill();
+                ctx.restore();
+            });
+            requestAnimationFrame(draw);
+        }
+
+        resize();
+        initParticles();
+        draw();
+
+        window.addEventListener('resize', () => {
+            resize();
+            initParticles();
+        });
+    })();
 </script>
 
 </body>
