@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,500,700,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     
     <style>
         :root {
@@ -289,13 +290,14 @@
         }
 
         .sobre-card {
-            background: var(--grafite-medio);
+            background: rgba(30, 30, 30, 0.4);
+            backdrop-filter: blur(12px);
             padding: 40px;
             border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
             position: relative;
             overflow: hidden;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            transition: all 0.3s;
         }
 
         .sobre-card:hover {
@@ -335,6 +337,9 @@
             border: 1px solid rgba(163, 230, 53, 0.2);
             transition: all 0.3s;
             cursor: default;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .skill-tag:hover {
@@ -399,15 +404,37 @@
         }
 
         .projeto-card {
-            background: var(--grafite-medio);
+            background: rgba(30, 30, 30, 0.4);
+            backdrop-filter: blur(12px);
             border-radius: 8px;
             padding: 30px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
             position: relative;
             z-index: 10;
+        }
+
+        .n8n-hero-card {
+            background: linear-gradient(135deg, rgba(255, 109, 90, 0.08) 0%, rgba(30, 30, 30, 0.6) 100%);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 40px;
+            border: 1px solid rgba(255, 109, 90, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+            grid-column: 1 / -1;
+            box-shadow: 0 0 30px rgba(255, 109, 90, 0.15);
+        }
+        
+        .n8n-hero-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 109, 90, 0.8);
+            box-shadow: 0 10px 40px rgba(255, 109, 90, 0.3), 0 0 20px rgba(255, 109, 90, 0.2);
         }
 
         .projeto-card:hover {
@@ -683,9 +710,77 @@
             .btn-contato { display: none; }
             .btn-lang { display: none; }
         }
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            top: 0; left: 0;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: var(--verde-limao);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            mix-blend-mode: difference;
+            display: none;
+        }
+        @media (pointer: fine) {
+            body { cursor: none; }
+            .custom-cursor { display: block; }
+            a, button, .hover-target, .skill-tag, .cert-item, .projeto-card { cursor: none !important; }
+        }
+        .custom-cursor.hover {
+            width: 50px; height: 50px;
+            background: rgba(163, 230, 53, 0.5);
+            mix-blend-mode: normal;
+        }
+
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Tech Marquee Bottom Bar */
+        #tech-marquee {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--verde-limao);
+            color: var(--grafite-escuro);
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-weight: 800;
+            padding: 8px 0;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            overflow: hidden;
+            display: flex;
+            white-space: nowrap;
+            box-shadow: 0 -5px 20px rgba(163, 230, 53, 0.2);
+        }
+        #tech-marquee.show {
+            transform: translateY(0);
+        }
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 25s linear infinite;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+        @keyframes marquee {
+            0%   { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
     </style>
 </head>
 <body>
+
+<div class="custom-cursor" id="custom-cursor"></div>
 
 <div id="progress-bar"></div>
 
@@ -736,7 +831,7 @@
     <div class="hero-overlay"></div>
 
     <div class="hero-content reveal">
-        <span class="tagline">System.out.println("Hello, World!");</span>
+        <span class="tagline" id="typewriter"></span>
         <h1 data-i18n="hero.title">Data Engineering & <br>Intelligent Automation</h1>
         <p data-i18n="hero.desc">Developing efficient solutions, integrating systems and creating tools that transform <span class="hero-accent">data into real decisions</span>.</p>
         <a href="#projetos" class="btn-primary hover-target" data-i18n="hero.btn">Explore Projects</a>
@@ -764,17 +859,17 @@
                 <div class="sobre-card" style="border-color: var(--ambar);">
                     <h3 style="margin-bottom: 20px;" data-i18n="skills.title">Tech Stack</h3>
                     <div class="skills">
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">Java</span>
-                        <span class="skill-tag">Node.js</span>
-                        <span class="skill-tag">React</span>
-                        <span class="skill-tag">Tailwind CSS</span>
-                        <span class="skill-tag">Docker</span>
-                        <span class="skill-tag">Git</span>
-                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag"><i class="devicon-python-plain"></i> Python</span>
+                        <span class="skill-tag"><i class="devicon-java-plain"></i> Java</span>
+                        <span class="skill-tag"><i class="devicon-nodejs-plain"></i> Node.js</span>
+                        <span class="skill-tag"><i class="devicon-react-original"></i> React</span>
+                        <span class="skill-tag"><i class="devicon-tailwindcss-original"></i> Tailwind CSS</span>
+                        <span class="skill-tag"><i class="devicon-docker-plain"></i> Docker</span>
+                        <span class="skill-tag"><i class="devicon-git-plain"></i> Git</span>
+                        <span class="skill-tag"><i class="devicon-mysql-plain"></i> MySQL</span>
+                        <span class="skill-tag"><i class="devicon-spring-original"></i> Spring Boot</span>
+                        <span class="skill-tag"><svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> <span data-i18n="skills.ai">Applied AI</span></span>
                         <span class="skill-tag">n8n</span>
-                        <span class="skill-tag">Spring Boot</span>
-                        <span class="skill-tag" data-i18n="skills.ai">Applied AI</span>
                     </div>
                 </div>
 
@@ -829,19 +924,26 @@
         <p style="text-align: center; color: #94a3b8; margin-bottom: 50px; font-size: 1.1rem; max-width: 700px; margin-left: auto; margin-right: auto;" class="reveal" data-i18n="tech.desc">Tools and platforms I master to build robust automation and data solutions.</p>
         
         <div class="projetos-grid">
-            <div class="projeto-card reveal">
-                <div style="display: flex; align-items: center; margin-bottom: 15px; gap: 15px;">
-                    <!-- Placeholder SVG for n8n -->
-                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="100" height="100" rx="20" fill="#FF6D5A"/>
-                        <path d="M35 65V35L65 50L35 65Z" fill="white"/>
+            <div class="n8n-hero-card reveal">
+                <div style="display: flex; align-items: center; margin-bottom: 25px; gap: 20px;">
+                    <svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="border-radius: 14px; box-shadow: 0 8px 25px rgba(255, 109, 90, 0.3);">
+                        <rect width="100" height="100" fill="#ea4262"/>
+                        <g stroke="white" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M 30 50 L 38 50" />
+                            <path d="M 54 50 L 60 50 C 66 50, 66 36, 70 36" />
+                            <path d="M 54 50 L 60 50 C 66 50, 66 64, 70 64" />
+                            <circle cx="22" cy="50" r="8" />
+                            <circle cx="46" cy="50" r="8" />
+                            <circle cx="78" cy="36" r="8" />
+                            <circle cx="78" cy="64" r="8" />
+                        </g>
                     </svg>
                     <div>
-                        <h3 style="margin-bottom: 5px;">n8n</h3>
-                        <span style="background: rgba(255, 109, 90, 0.1); color: #FF6D5A; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">Workflow Automation</span>
+                        <h3 style="margin-bottom: 8px; font-size: 2.2rem; color: #f8fafc;">n8n</h3>
+                        <span style="background: rgba(255, 109, 90, 0.15); color: #FF6D5A; padding: 6px 12px; border-radius: 6px; font-size: 1rem; font-weight: bold; border: 1px solid rgba(255, 109, 90, 0.2);">Workflow Automation Platform</span>
                     </div>
                 </div>
-                <p data-i18n="tech.n8n.desc">Advanced workflow automation tool. I use it to integrate APIs, databases, and AI models seamlessly, building scalable data pipelines and business process automations without extensive boilerplate code.</p>
+                <p data-i18n="tech.n8n.desc" style="font-size: 1.15rem; line-height: 1.8; color: #e2e8f0; flex-grow: 1;">Advanced workflow automation tool. I use it to integrate APIs, databases, and AI models seamlessly, building scalable data pipelines and business process automations without extensive boilerplate code.</p>
             </div>
             <!-- More technologies can be added here -->
         </div>
@@ -1182,7 +1284,57 @@
             initParticles();
         });
     })();
+
+    // 7. Custom Cursor
+    const cursor = document.getElementById('custom-cursor');
+    if (cursor) {
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        document.querySelectorAll('a, button, .hover-target, .skill-tag, .cert-item, .projeto-card').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+    }
+
+    // 8. Typewriter Effect
+    const taglineElement = document.getElementById('typewriter');
+    if (taglineElement) {
+        const textToType = 'System.out.println("Hello, World!");';
+        let i = 0;
+        function typeWriter() {
+            if (i < textToType.length) {
+                taglineElement.innerHTML += textToType.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            } else {
+                taglineElement.innerHTML += '<span class="cursor-blink">_</span>';
+            }
+        }
+        setTimeout(typeWriter, 1000);
+    }
+
+    // 9. Show Tech Marquee on reaching bottom
+    window.addEventListener('scroll', () => {
+        const marquee = document.getElementById('tech-marquee');
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const pageHeight = document.documentElement.scrollHeight;
+        
+        if (pageHeight - scrollPosition < 80) {
+            marquee.classList.add('show');
+        } else {
+            marquee.classList.remove('show');
+        }
+    });
 </script>
+
+<!-- Tech Marquee Status Bar -->
+<div id="tech-marquee">
+    <div class="marquee-content">
+        // PYTHON // JAVA // REACT // NODE.JS // DOCKER // SPRING BOOT // N8N // MYSQL // TAILWIND CSS // APPLIED AI // GIT // GCP // PYTHON // JAVA // REACT // NODE.JS // DOCKER // SPRING BOOT // N8N // MYSQL // TAILWIND CSS // APPLIED AI // GIT // GCP //
+    </div>
+</div>
 
 </body>
 </html>
