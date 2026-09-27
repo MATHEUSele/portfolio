@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artemis 2.0 - Galeria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            font-family: 'Inter Tight', sans-serif;
+            background-color: #0f172a; 
+            background-image: url('images/artemis_background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+        }
+        .overlay {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            min-height: 100vh;
+            padding: 60px 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        h1 { 
+            margin: 0; 
+            font-size: 2.8rem; 
+            background: linear-gradient(to right, #a855f7, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            color: #a855f7;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+        .back-btn:hover {
+            background: rgba(168, 85, 247, 0.2);
+            transform: translateX(-5px);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+        .back-btn svg {
+            margin-right: 8px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .image-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #cbd5e1;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .image-card:hover {
+            border-color: rgba(168, 85, 247, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(168, 85, 247, 0.2);
+        }
+        /* Configuração para a imagem preencher o card quando colocada */
+        .image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        .placeholder-text {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="container">
+            <div class="header">
+                <h1>Artemis 2.0</h1>
+                <a href="index.html" class="back-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Voltar ao Portfólio
+                </a>
+            </div>
+            
+            <p style="color: #cbd5e1; margin-bottom: 40px; font-size: 1.1rem; line-height: 1.6; max-width: 800px;">
+                Bem-vindo à galeria do Artemis 2.0. Aqui você pode exibir capturas de tela da interface e detalhes do projeto. Para adicionar suas imagens, basta substituir as divs <code>&lt;div class="image-card"&gt;</code> pelas suas tags <code>&lt;img&gt;</code> no código fonte deste arquivo (<code>artemis.html</code>).
+            </p>
+
+            <div class="gallery-grid">
+                
+                <!-- Exemplo de como ficará depois que você colocar a imagem real: -->
+                <!-- 
+                <div class="image-card">
+                    <img src="images/print-artemis-1.jpg" alt="Interface Artemis">
+                </div> 
+                -->
+                
+                <div class="image-card">
+                    <span class="placeholder-text">Espaço para Imagem 1</span>
+                </div>
+                <div class="image-card">
+                    <span class="placeholder-text">Espaço para Imagem 2</span>
+                </div>
+                <div class="image-card">
+                    <span class="placeholder-text">Espaço para Imagem 3</span>
+                </div>
+                <div class="image-card">
+                    <span class="placeholder-text">Espaço para Imagem 4</span>
+                </div>
+                <div class="image-card">
+                    <span class="placeholder-text">Espaço para Imagem 5</span>
+                </div>
+                <div class="image-card">
+                    <span class="placeholder-text">Espaço para Imagem 6</span>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

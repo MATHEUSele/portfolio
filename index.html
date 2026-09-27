@@ -843,6 +843,14 @@
         <h2 class="section-title reveal" data-i18n="about.title">About <span>Me</span></h2>
         <div class="sobre-grid">
             <div class="sobre-texto reveal-left">
+                <div style="display: flex; justify-content: center; margin-bottom: 50px; margin-top: 20px;">
+                    <div style="position: relative; width: 220px; height: 220px; display: flex; justify-content: center; align-items: flex-end;">
+                        <!-- Círculo de fundo estilo Pop-out (efeito 3D) -->
+                        <div style="position: absolute; width: 220px; height: 220px; bottom: 0; border-radius: 50%; background: linear-gradient(135deg, rgba(163, 230, 53, 0.15), rgba(59, 130, 246, 0.15)); border: 2px solid var(--verde-limao); box-shadow: inset 0 0 20px rgba(163, 230, 53, 0.2), 0 15px 35px rgba(0,0,0,0.5); z-index: 1;"></div>
+                        <!-- Imagem PNG vazada saltando para fora -->
+                        <img src="images/profile.png" alt="Matheus" style="position: relative; z-index: 2; width: 260px; max-width: none; object-fit: contain; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.7)); transform: translateY(15px);">
+                    </div>
+                </div>
                 <div class="sobre-card">
                     <p data-i18n="about.text1">
                         I'm a developer focused on building efficient and well-structured applications. My day-to-day focus is ensuring that the features I build are not just delivered, but delivered with quality.
@@ -918,7 +926,7 @@
     </div>
 </section>
 
-<section id="tecnologias" class="chapter" style="background: var(--grafite-medio);">
+<section id="tecnologias" class="chapter">
     <div class="container">
         <h2 class="section-title reveal" data-i18n="tech.title">My <span>Technologies</span></h2>
         <p style="text-align: center; color: #94a3b8; margin-bottom: 50px; font-size: 1.1rem; max-width: 700px; margin-left: auto; margin-right: auto;" class="reveal" data-i18n="tech.desc">Tools and platforms I master to build robust automation and data solutions.</p>
@@ -950,12 +958,19 @@
     </div>
 </section>
 
-<section id="curriculo" class="chapter">
-    <div class="container" style="text-align: center;">
+<section id="curriculo" class="chapter" style="position: relative; overflow: hidden; padding: 120px 0; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);">
+    <!-- Background em Vídeo -->
+    <video autoplay loop muted playsinline style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 100%; min-height: 100%; object-fit: cover; z-index: 0; opacity: 0.8; pointer-events: none;">
+        <source src="images/curriculo_bg.mp4" type="video/mp4">
+    </video>
+    <!-- Overlay Escurecido com Transição Suave -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(18,18,18,1) 0%, rgba(18,18,18,0.5) 15%, rgba(18,18,18,0.5) 85%, rgba(18,18,18,1) 100%); z-index: 1;"></div>
+    
+    <div class="container" style="text-align: center; position: relative; z-index: 2;">
         <h2 class="section-title reveal" data-i18n="cv.title">My <span>Curriculum</span></h2>
-        <p style="color: #94a3b8; margin-bottom: 40px; font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto;" class="reveal" data-i18n="cv.desc">Download my updated curriculum to see my full trajectory, academic background, and professional experiences.</p>
+        <p style="color: #cbd5e1; margin-bottom: 40px; font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto; text-shadow: 0 2px 10px rgba(0,0,0,0.8);" class="reveal" data-i18n="cv.desc">Download my updated curriculum to see my full trajectory, academic background, and professional experiences.</p>
         <div class="reveal">
-            <a href="certificados/curriculo.pdf" target="_blank" class="btn-primary hover-target" style="display: inline-flex; align-items: center; gap: 10px;">
+            <a href="certificados/curriculo.pdf" target="_blank" class="btn-primary hover-target" style="display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 5px 20px rgba(163, 230, 53, 0.4);">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span data-i18n="cv.btn">Download Curriculum (PDF)</span>
             </a>
@@ -968,7 +983,7 @@
         <h2 class="section-title reveal" data-i18n="projects.title">Featured <span>Projects</span></h2>
         <div class="projetos-grid">
             
-            <div class="projeto-card reveal" style="transition-delay: 0.1s;">
+            <div class="projeto-card reveal" style="transition-delay: 0.1s; background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.95)), url('images/whatsapp_background.jpg') center/cover no-repeat; border-color: rgba(37, 211, 102, 0.3);">
                 <h3 data-i18n="proj1.title">WhatsApp Node.js Chatbot</h3>
                 <p data-i18n="proj1.desc">A simple chatbot designed to automate initial customer interactions. Provides 24/7 support, directs to important information, and collects requests for human agents, increasing engagement and satisfaction.</p>
                 <a href="https://github.com/MATHEUSele/chatbot-project" class="projeto-link hover-target" target="_blank">
@@ -977,7 +992,7 @@
                 </a>
             </div>
 
-            <div class="projeto-card reveal" style="transition-delay: 0.2s;">
+            <div class="projeto-card reveal" style="transition-delay: 0.2s; background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.95)), url('images/java_background.jpg') center/cover no-repeat; border-color: rgba(228, 56, 56, 0.3);">
                 <h3 data-i18n="proj2.title">Java Academic System</h3>
                 <p data-i18n="proj2.desc">A college management system developed in Java. Allows full control over students, professors, courses, and classes, with features for registration, removal, querying, and grade management.</p>
                 <a href="https://github.com/atividadesPLRian/Projeto-Final" class="projeto-link hover-target" target="_blank">
@@ -986,13 +1001,19 @@
                 </a>
             </div>
 
-            <div class="projeto-card reveal" style="transition-delay: 0.3s;">
+            <div class="projeto-card reveal" style="transition-delay: 0.3s; background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.9)), url('images/artemis_background.jpg') center/cover no-repeat; border-color: rgba(168, 85, 247, 0.3);">
                 <h3 data-i18n="proj3.title">Artemis 2.0 - Virtual AI Assistant</h3>
                 <p data-i18n="proj3.desc">Evolution of an AI project into a modern, high-performance virtual assistant. Rebuilt from scratch using React, Tailwind CSS, FastAPI, and Google Gemini via WebSockets for real-time interactions.</p>
-                <a href="https://github.com/MATHEUSele/Art-mis" class="projeto-link hover-target" target="_blank">
-                    <span data-i18n="proj.link">View Repository</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </a>
+                <div style="display: flex; gap: 20px; align-items: center; margin-top: auto;">
+                    <a href="https://github.com/MATHEUSele/Art-mis" class="projeto-link hover-target" target="_blank" style="margin-top: 0;">
+                        <span data-i18n="proj.link">View Repository</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </a>
+                    <a href="artemis.html" class="projeto-link hover-target" style="margin-top: 0; color: #a855f7;">
+                        <span>Ver Imagens</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    </a>
+                </div>
             </div>
 
         </div>
