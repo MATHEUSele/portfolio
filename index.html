@@ -969,10 +969,10 @@
         <h2 class="section-title reveal" data-i18n="cv.title">My <span>Curriculum</span></h2>
         <p style="color: #cbd5e1; margin-bottom: 40px; font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto; text-shadow: 0 2px 10px rgba(0,0,0,0.8);" class="reveal" data-i18n="cv.desc">Download my updated curriculum to see my full trajectory, academic background, and professional experiences.</p>
         <div class="reveal">
-            <a href="certificados/curriculo.pdf" target="_blank" class="btn-primary hover-target" style="display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 5px 20px rgba(163, 230, 53, 0.4);">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span data-i18n="cv.btn">Download Curriculum (PDF)</span>
-            </a>
+            <button onclick="toggleCvModal()" class="btn-primary hover-target" style="display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 5px 20px rgba(163, 230, 53, 0.4); border: none; cursor: pointer; font-family: inherit;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span data-i18n="cv.view_btn">View & Download Curriculum</span>
+            </button>
         </div>
     </div>
 </section>
@@ -1019,6 +1019,27 @@
     </div>
 </section>
 
+<!-- Modal Currículo -->
+<div class="modal-overlay" id="cvModal">
+    <div class="modal-content" style="max-width: 900px; width: 95%; height: 85vh; display: flex; flex-direction: column;">
+        <button class="close-modal hover-target" onclick="toggleCvModal()">×</button>
+        <h3 data-i18n="cv.modal.title" style="margin-bottom: 20px;">Curriculum Preview</h3>
+        <div style="flex-grow: 1; margin-bottom: 20px; background: #fff; border-radius: 4px; overflow: hidden; position: relative;">
+            <iframe src="certificados/Modern Minimalist CV Resume.pdf" width="100%" height="100%" style="border: none;" title="Curriculum PDF"></iframe>
+            <!-- Fallback se o navegador não renderizar o PDF -->
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #333; pointer-events: none; z-index: -1;">
+                <p>Preview not available in this browser.</p>
+            </div>
+        </div>
+        <div style="text-align: right;">
+            <a href="certificados/Modern Minimalist CV Resume.pdf" download="Matheus_Eleoterio_Curriculo.pdf" class="btn-primary hover-target" style="display: inline-flex; align-items: center; gap: 10px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span data-i18n="cv.btn">Download Curriculum (PDF)</span>
+            </a>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Contato -->
 <div class="modal-overlay" id="contactModal">
     <div class="modal-content">
@@ -1049,13 +1070,13 @@
             "nav.skills": "Skills",
             "nav.curriculum": "Curriculum",
             "nav.contact": "Contact",
-            "hero.title": "AI Developer & <br>Automation Specialist",
-            "hero.desc": "Developing AI agents, automating workflows and creating solutions that transform <span class='hero-accent'>complex tasks into efficient processes</span>.",
+            "hero.title": "Backend Developer & <br>AI Specialist",
+            "hero.desc": "Information Systems student (UFPB) and intern at Petrobras. I build scalable smart solutions, blending <span class='hero-accent'>Artificial Intelligence (LLMOps) and process automation</span>.",
             "hero.btn": "Explore Projects",
             "about.title": "About <span>Me</span>",
-            "about.text1": "I'm a developer focused on building efficient and well-structured applications. My day-to-day focus is ensuring that the features I build are not just delivered, but delivered with quality.",
-            "about.text2": "I adapt easily to project demands, from creating responsive interfaces to securely integrating with APIs and databases.",
-            "about.text3": "I highly value clear communication, teamwork, and the constant drive to write better code every day.",
+            "about.text1": "I am an Information Systems student at UFPB and a Developer focused on Backend, Artificial Intelligence (LLMOps), and Process Automation.",
+            "about.text2": "I have advanced practical experience with Python, building RAG (Retrieval-Augmented Generation) systems integrated with LangChain, and workflow automation using n8n.",
+            "about.text3": "Currently interning at Petrobras, I constantly seek to apply modern technologies and scalable architectures to optimize operational workflows, manage autonomous infrastructure (Home Servers), and solve complex problems with rapid technological adaptation.",
             "skills.title": "Tech Stack",
             "skills.ai": "Applied AI",
             "projects.title": "Featured <span>Projects</span>",
@@ -1085,6 +1106,8 @@
             "cv.title": "My <span>Curriculum</span>",
             "cv.desc": "Download my updated curriculum to see my full trajectory, academic background, and professional experiences.",
             "cv.btn": "Download Curriculum (PDF)",
+            "cv.view_btn": "View & Download Curriculum",
+            "cv.modal.title": "Curriculum Preview",
             "footer.text": "© 2026 - Matheus E. L. Eleoterio • \"Transforming data and processes into decisions.\""
         },
         pt: {
@@ -1094,13 +1117,13 @@
             "nav.skills": "Habilidades",
             "nav.curriculum": "Currículo",
             "nav.contact": "Contato",
-            "hero.title": "AI Developer & <br>Automation Specialist",
-            "hero.desc": "Desenvolvendo agentes de IA, automatizando fluxos de trabalho e criando soluções que transformam <span class='hero-accent'>tarefas complexas em processos eficientes</span>.",
+            "hero.title": "Desenvolvedor Backend & <br>Especialista em IA",
+            "hero.desc": "Estudante de Sistemas de Informação (UFPB) e estagiário na Petrobras. Crio soluções inteligentes escaláveis, unindo <span class='hero-accent'>Inteligência Artificial (LLMOps) e automação de processos</span>.",
             "hero.btn": "Explorar Projetos",
             "about.title": "Sobre <span>Mim</span>",
-            "about.text1": "Sou um desenvolvedor focado em construir aplicações eficientes e bem estruturadas. Meu foco no dia a dia é garantir que as funcionalidades que construo não sejam apenas entregues, mas entregues com qualidade.",
-            "about.text2": "Adapto-me facilmente às demandas dos projetos, desde a criação de interfaces responsivas até a integração segura com APIs e bancos de dados.",
-            "about.text3": "Valorizo muito a comunicação clara, o trabalho em equipe e a busca constante por escrever um código melhor a cada dia.",
+            "about.text1": "Sou estudante de Sistemas de Informação na UFPB e Desenvolvedor com foco em Backend, Inteligência Artificial (LLMOps) e Automação de Processos.",
+            "about.text2": "Possuo experiência prática avançada com Python, construção de sistemas RAG (Retrieval-Augmented Generation) integrados com LangChain, e automação de fluxos de trabalho utilizando n8n.",
+            "about.text3": "Atualmente estagiando na Petrobras, busco sempre aplicar tecnologias modernas e arquiteturas escaláveis para otimizar fluxos operacionais, gerenciar infraestrutura autônoma (Home Servers) e resolver problemas complexos com rápida adaptação.",
             "skills.title": "Stack Tecnológica",
             "skills.ai": "IA Aplicada",
             "projects.title": "Projetos <span>Em Destaque</span>",
@@ -1130,6 +1153,8 @@
             "cv.title": "Meu <span>Currículo</span>",
             "cv.desc": "Baixe meu currículo atualizado para ver minha trajetória completa, formação acadêmica e experiências profissionais.",
             "cv.btn": "Baixar Currículo (PDF)",
+            "cv.view_btn": "Visualizar e Baixar Currículo",
+            "cv.modal.title": "Pré-visualização do Currículo",
             "footer.text": "© 2026 - Matheus E. L. Eleoterio • \"Transformando dados e processos em decisões.\""
         }
     };
@@ -1208,6 +1233,13 @@
     function toggleModal() {
         const modal = document.getElementById('contactModal');
         modal.classList.toggle('active');
+    }
+
+    function toggleCvModal() {
+        const cvModal = document.getElementById('cvModal');
+        cvModal.classList.toggle('active');
+        // Previne rolagem de fundo quando modal estiver aberto (aplicável tbm ao contactModal se desejar)
+        document.body.style.overflow = cvModal.classList.contains('active') ? 'hidden' : '';
     }
 
     // 5. Mobile Nav Toggle
