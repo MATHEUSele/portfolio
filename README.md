@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="images/bg.jpg" alt="Portfolio Hero Background" width="100%" style="border-radius: 10px; margin-bottom: 20px;" />
+  <img src="images/profile.png" alt="Profile" width="200" style="border-radius: 50%; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" />
 
   <h1>🚀 Matheus E. L. Eleoterio | Portfólio</h1>
 
@@ -9,10 +9,9 @@
 
   <br>
 
-  <!-- Substitua o link abaixo pelo seu link real do GitHub Pages -->
   <h2>
-    <a href="https://SEU_USUARIO.github.io/portfolio" target="_blank">
-      ✨ Acessar o Portfólio Online (GitHub Pages) ✨
+    <a href="https://matheusele.github.io/portfolio/" target="_blank">
+      ✨ Acessar o Portfólio Online ✨
     </a>
   </h2>
 
@@ -21,13 +20,6 @@
 
 Este é o meu portfólio pessoal, projetado com muito cuidado para demonstrar meus projetos em tecnologia, habilidades e certificações de uma forma moderna, interativa e imersiva.
 
-## 📸 Preview do Site
-
-> **Dica:** Tire um print (screenshot) da tela inicial do seu site em funcionamento, salve como `hero-preview.png` na pasta `images/` e a imagem aparecerá abaixo representando como o site é na prática!
-
-<div align="center">
-  <img src="images/hero-preview.png" alt="Preview da Seção Hero" width="80%" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);" />
-</div>
 
 ## 🚀 Tecnologias Utilizadas
 
