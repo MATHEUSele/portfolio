@@ -664,11 +664,13 @@
             padding: 60px 40px;
             gap: 10px;
             transform: translateX(100%);
+            pointer-events: none;
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .mobile-nav.open {
             transform: translateX(0);
+            pointer-events: auto;
         }
 
         .mobile-nav a {
@@ -713,11 +715,13 @@
             background: rgba(0,0,0,0.6);
             z-index: 1040;
             opacity: 0;
+            pointer-events: none;
             transition: opacity 0.4s;
         }
 
         .mobile-nav-overlay.open {
             opacity: 1;
+            pointer-events: auto;
         }
 
         @media (max-width: 768px) {
@@ -786,6 +790,7 @@
             overflow: hidden;
             display: flex;
             white-space: nowrap;
+            pointer-events: none;
             box-shadow: 0 -5px 20px rgba(163, 230, 53, 0.2);
         }
         #tech-marquee.show {
