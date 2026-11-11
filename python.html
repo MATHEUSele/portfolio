@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python - Demonstração Interativa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            font-family: 'Inter Tight', sans-serif;
+            background-color: #0b1120;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.22) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.18) 0%, transparent 50%),
+                linear-gradient(135deg, #090d16 0%, #0f172a 50%, #0b132b 100%);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+        }
+        .overlay {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            min-height: 100vh;
+            padding: 50px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 960px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .title-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        h1 { 
+            margin: 0; 
+            font-size: 2.6rem; 
+            background: linear-gradient(to right, #60a5fa, #3b82f6, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: rgba(15, 23, 42, 0.85);
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 1px solid rgba(59, 130, 246, 0.35);
+        }
+        .back-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateX(-5px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .back-btn svg {
+            margin-right: 8px;
+        }
+
+        /* Janela do Chat Simulado */
+        .chat-window {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(59, 130, 246, 0.12);
+            display: flex;
+            flex-direction: column;
+            height: 620px;
+            overflow: hidden;
+        }
+
+        .chat-topbar {
+            background: rgba(9, 13, 22, 0.85);
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 8px;
+        }
+        .dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .chat-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: #93c5fd;
+        }
+        .status-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #3b82f6;
+            box-shadow: 0 0 10px #3b82f6;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            line-height: 1.55;
+            font-size: 0.98rem;
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-bottom-left-radius: 4px;
+            color: #e2e8f0;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border-bottom-right-radius: 4px;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
+        }
+
+        .message pre {
+            background: #090d16;
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 8px;
+            padding: 12px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #93c5fd;
+            margin: 10px 0 0 0;
+        }
+
+        .quick-prompts {
+            padding: 12px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+
+        .prompt-chip {
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .prompt-chip:hover {
+            background: rgba(59, 130, 246, 0.25);
+            border-color: #60a5fa;
+            color: #fff;
+        }
+
+        .chat-input-area {
+            padding: 16px 20px;
+            background: rgba(9, 13, 22, 0.9);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: white;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input:focus {
+            border-color: #60a5fa;
+        }
+
+        .send-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0 22px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .send-btn:hover {
+            background: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            body, html {
+                background-attachment: scroll;
+            }
+            .overlay {
+                padding: 24px 14px;
+            }
+            h1 {
+                font-size: 1.9rem;
+            }
+            .chat-window {
+                height: 72vh;
+            }
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="container">
+            <div class="header">
+                <div class="title-group">
+                    <svg width="46" height="46" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" style="border-radius: 10px; box-shadow: 0 6px 18px rgba(59, 130, 246, 0.35); flex-shrink: 0;">
+                        <rect width="128" height="128" fill="#2563eb"/>
+                        <g transform="translate(22, 22) scale(0.65625)" fill="white">
+                            <path d="M49.33 62h29.159C86.606 62 93 55.132 93 46.981V19.183c0-7.912-6.632-13.856-14.555-15.176-5.014-.835-10.195-1.215-15.187-1.191-4.99.023-9.612.448-13.805 1.191C37.098 6.188 35 10.758 35 19.183V30h29v4H23.776c-8.484 0-15.914 5.108-18.237 14.811-2.681 11.12-2.8 17.919 0 29.53C7.614 86.983 12.569 93 21.054 93H31V79.952C31 70.315 39.428 62 49.33 62zm-1.838-39.11c-3.026 0-5.478-2.479-5.478-5.545 0-3.079 2.451-5.581 5.478-5.581 3.015 0 5.479 2.502 5.479 5.581-.001 3.066-2.465 5.545-5.479 5.545z"/>
+                            <path d="M78.67 66H49.511C41.394 66 35 72.868 35 81.019v27.798c0 7.912 6.632 13.856 14.555 15.176 5.014.835 10.195 1.215 15.187 1.191 4.99-.023 9.612-.448 13.805-1.191C90.902 121.812 93 117.242 93 108.817V98H64v-4h40.224c8.484 0 15.914-5.108 18.237-14.811 2.681-11.12 2.8-17.919 0-29.53C120.386 41.017 115.431 35 106.946 35H97v13.048C97 57.685 88.572 66 78.67 66zm1.838 39.11c3.026 0 5.478 2.479 5.478 5.545 0 3.079-2.451 5.581-5.478 5.581-3.015 0-5.479-2.502-5.479-5.581.001-3.066 2.465-5.545 5.479-5.545z"/>
+                        </g>
+                    </svg>
+                    <h1>Python Stack</h1>
+                </div>
+                <a href="index.html#tecnologias" class="back-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Voltar ao Portfólio
+                </a>
+            </div>
+
+            <!-- Área do Chat Simulado -->
+            <div class="chat-window">
+                <div class="chat-topbar">
+                    <div class="window-dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <div class="chat-status">
+                        <span class="status-pulse"></span>
+                        <span>python_agent.py — online</span>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <!-- As mensagens do script de simulação entram aqui -->
+                </div>
+
+                <div class="quick-prompts" id="quickPrompts">
+                    <!-- Botões de perguntas rápidas do script -->
+                </div>
+
+                <form class="chat-input-area" id="chatForm" onsubmit="handleUserSubmit(event)">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Digite uma pergunta ou selecione um tópico..." autocomplete="off">
+                    <button type="submit" class="send-btn">
+                        <span>Enviar</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estrutura pronta para o script de simulação de chat
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+
+        function handleUserSubmit(e) {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+            chatInput.value = '';
+        }
+    </script>
+</body>
+</html>
