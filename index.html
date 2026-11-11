@@ -437,6 +437,27 @@
             box-shadow: 0 10px 40px rgba(255, 109, 90, 0.3), 0 0 20px rgba(255, 109, 90, 0.2);
         }
 
+        .python-hero-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(30, 30, 30, 0.6) 100%);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+            grid-column: 1 / -1;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+        }
+
+        .python-hero-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.8);
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3), 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
         .projeto-card:hover {
             transform: translateY(-10px);
             border-color: var(--verde-limao);
@@ -726,7 +747,7 @@
         @media (pointer: fine) {
             body { cursor: none; }
             .custom-cursor { display: block; }
-            a, button, .hover-target, .skill-tag, .cert-item, .projeto-card { cursor: none !important; }
+            a, button, .hover-target, .skill-tag, .cert-item, .projeto-card, .n8n-hero-card, .python-hero-card { cursor: none !important; }
         }
         .custom-cursor.hover {
             width: 50px; height: 50px;
@@ -959,6 +980,23 @@
                 </div>
                 <p data-i18n="tech.n8n.desc" style="font-size: 1.15rem; line-height: 1.8; color: #e2e8f0; flex-grow: 1;">Advanced workflow automation tool. I use it to integrate APIs, databases, and AI models seamlessly, building scalable data pipelines and business process automations without extensive boilerplate code.</p>
             </div>
+
+            <div class="python-hero-card reveal">
+                <div style="display: flex; align-items: center; margin-bottom: 25px; gap: 20px;">
+                    <svg width="70" height="70" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" style="border-radius: 14px; box-shadow: 0 8px 25px rgba(59, 130, 246, 0.35); flex-shrink: 0;">
+                        <rect width="128" height="128" fill="#2563eb"/>
+                        <g transform="translate(22, 22) scale(0.65625)" fill="white">
+                            <path d="M49.33 62h29.159C86.606 62 93 55.132 93 46.981V19.183c0-7.912-6.632-13.856-14.555-15.176-5.014-.835-10.195-1.215-15.187-1.191-4.99.023-9.612.448-13.805 1.191C37.098 6.188 35 10.758 35 19.183V30h29v4H23.776c-8.484 0-15.914 5.108-18.237 14.811-2.681 11.12-2.8 17.919 0 29.53C7.614 86.983 12.569 93 21.054 93H31V79.952C31 70.315 39.428 62 49.33 62zm-1.838-39.11c-3.026 0-5.478-2.479-5.478-5.545 0-3.079 2.451-5.581 5.478-5.581 3.015 0 5.479 2.502 5.479 5.581-.001 3.066-2.465 5.545-5.479 5.545z"/>
+                            <path d="M78.67 66H49.511C41.394 66 35 72.868 35 81.019v27.798c0 7.912 6.632 13.856 14.555 15.176 5.014.835 10.195 1.215 15.187 1.191 4.99-.023 9.612-.448 13.805-1.191C90.902 121.812 93 117.242 93 108.817V98H64v-4h40.224c8.484 0 15.914-5.108 18.237-14.811 2.681-11.12 2.8-17.919 0-29.53C120.386 41.017 115.431 35 106.946 35H97v13.048C97 57.685 88.572 66 78.67 66zm1.838 39.11c3.026 0 5.478 2.479 5.478 5.545 0 3.079-2.451 5.581-5.478 5.581-3.015 0-5.479-2.502-5.479-5.581.001-3.066 2.465-5.545 5.479-5.545z"/>
+                        </g>
+                    </svg>
+                    <div>
+                        <h3 style="margin-bottom: 8px; font-size: 2.2rem; color: #f8fafc;">Python</h3>
+                        <span data-i18n="tech.python.tag" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 6px 12px; border-radius: 6px; font-size: 1rem; font-weight: bold; border: 1px solid rgba(59, 130, 246, 0.25);">AI, Backend & Automation</span>
+                    </div>
+                </div>
+                <p data-i18n="tech.python.desc" style="font-size: 1.15rem; line-height: 1.8; color: #e2e8f0; flex-grow: 1;">Core language in my stack for building high-performance backends with FastAPI, RAG architectures with LangChain, intelligent AI agents, and complex data engineering and automation scripts.</p>
+            </div>
             <!-- More technologies can be added here -->
         </div>
     </div>
@@ -1144,6 +1182,8 @@
             "tech.title": "My <span>Technologies</span>",
             "tech.desc": "Tools and platforms I master to build robust automation and data solutions.",
             "tech.n8n.desc": "Advanced workflow automation tool. I use it to integrate APIs, databases, and AI models seamlessly, building scalable data pipelines and business process automations without extensive boilerplate code.",
+            "tech.python.tag": "AI, Backend & Automation",
+            "tech.python.desc": "Core language in my stack for building high-performance backends with FastAPI, RAG architectures with LangChain, intelligent AI agents, and complex data engineering and automation scripts.",
             "cv.title": "My <span>Curriculum</span>",
             "cv.desc": "Download my updated curriculum to see my full trajectory, academic background, and professional experiences.",
             "cv.btn": "Download Curriculum (PDF)",
@@ -1195,6 +1235,8 @@
             "tech.title": "Minhas <span>Tecnologias</span>",
             "tech.desc": "Ferramentas e plataformas que domino para construir soluções robustas de dados e automação.",
             "tech.n8n.desc": "Ferramenta avançada de automação de fluxos de trabalho. Utilizo para integrar APIs, bancos de dados e modelos de IA de forma contínua, construindo pipelines de dados escaláveis e automações de processos sem excesso de código.",
+            "tech.python.tag": "IA, Backend & Automação",
+            "tech.python.desc": "Linguagem principal da minha stack para construção de backends de alta performance com FastAPI, arquiteturas RAG com LangChain, agentes inteligentes de IA e scripts avançados de dados e automação.",
             "cv.title": "Meu <span>Currículo</span>",
             "cv.desc": "Baixe meu currículo atualizado para ver minha trajetória completa, formação acadêmica e experiências profissionais.",
             "cv.btn": "Baixar Currículo (PDF)",
