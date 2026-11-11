@@ -723,6 +723,12 @@
         @media (max-width: 768px) {
             #hero h1 { font-size: 2.8rem; }
             .sobre-grid { grid-template-columns: 1fr; }
+            .projetos-grid { grid-template-columns: 1fr; }
+            .n8n-hero-card, .python-hero-card { padding: 24px 20px; }
+            .tech-card-header { gap: 14px !important; margin-bottom: 18px !important; }
+            .tech-card-header svg { width: 54px !important; height: 54px !important; border-radius: 12px !important; }
+            .tech-card-header h3 { font-size: 1.65rem !important; margin-bottom: 6px !important; }
+            .tech-badge { font-size: 0.78rem !important; padding: 4px 10px !important; }
             header { padding: 15px 20px; }
             nav { display: none; }
             .hamburger { display: flex; }
@@ -960,8 +966,8 @@
         
         <div class="projetos-grid">
             <div class="n8n-hero-card reveal">
-                <div style="display: flex; align-items: center; margin-bottom: 25px; gap: 20px;">
-                    <svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="border-radius: 14px; box-shadow: 0 8px 25px rgba(255, 109, 90, 0.3);">
+                <div class="tech-card-header" style="display: flex; align-items: center; margin-bottom: 25px; gap: 20px;">
+                    <svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="border-radius: 14px; box-shadow: 0 8px 25px rgba(255, 109, 90, 0.3); flex-shrink: 0;">
                         <rect width="100" height="100" fill="#ea4262"/>
                         <g stroke="white" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M 30 50 L 38 50" />
@@ -973,16 +979,16 @@
                             <circle cx="78" cy="64" r="8" />
                         </g>
                     </svg>
-                    <div>
+                    <div style="min-width: 0;">
                         <h3 style="margin-bottom: 8px; font-size: 2.2rem; color: #f8fafc;">n8n</h3>
-                        <span style="background: rgba(255, 109, 90, 0.15); color: #FF6D5A; padding: 6px 12px; border-radius: 6px; font-size: 1rem; font-weight: bold; border: 1px solid rgba(255, 109, 90, 0.2);">Workflow Automation Platform</span>
+                        <span class="tech-badge" data-i18n="tech.n8n.tag" style="display: inline-block; line-height: 1.3; background: rgba(255, 109, 90, 0.15); color: #FF6D5A; padding: 6px 12px; border-radius: 6px; font-size: 0.95rem; font-weight: bold; border: 1px solid rgba(255, 109, 90, 0.2);">Workflow Automation</span>
                     </div>
                 </div>
                 <p data-i18n="tech.n8n.desc" style="font-size: 1.15rem; line-height: 1.8; color: #e2e8f0; flex-grow: 1;">Advanced workflow automation tool. I use it to integrate APIs, databases, and AI models seamlessly, building scalable data pipelines and business process automations without extensive boilerplate code.</p>
             </div>
 
             <div class="python-hero-card reveal">
-                <div style="display: flex; align-items: center; margin-bottom: 25px; gap: 20px;">
+                <div class="tech-card-header" style="display: flex; align-items: center; margin-bottom: 25px; gap: 20px;">
                     <svg width="70" height="70" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" style="border-radius: 14px; box-shadow: 0 8px 25px rgba(59, 130, 246, 0.35); flex-shrink: 0;">
                         <rect width="128" height="128" fill="#2563eb"/>
                         <g transform="translate(22, 22) scale(0.65625)" fill="white">
@@ -990,9 +996,9 @@
                             <path d="M78.67 66H49.511C41.394 66 35 72.868 35 81.019v27.798c0 7.912 6.632 13.856 14.555 15.176 5.014.835 10.195 1.215 15.187 1.191 4.99-.023 9.612-.448 13.805-1.191C90.902 121.812 93 117.242 93 108.817V98H64v-4h40.224c8.484 0 15.914-5.108 18.237-14.811 2.681-11.12 2.8-17.919 0-29.53C120.386 41.017 115.431 35 106.946 35H97v13.048C97 57.685 88.572 66 78.67 66zm1.838 39.11c3.026 0 5.478 2.479 5.478 5.545 0 3.079-2.451 5.581-5.478 5.581-3.015 0-5.479-2.502-5.479-5.581.001-3.066 2.465-5.545 5.479-5.545z"/>
                         </g>
                     </svg>
-                    <div>
+                    <div style="min-width: 0;">
                         <h3 style="margin-bottom: 8px; font-size: 2.2rem; color: #f8fafc;">Python</h3>
-                        <span data-i18n="tech.python.tag" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 6px 12px; border-radius: 6px; font-size: 1rem; font-weight: bold; border: 1px solid rgba(59, 130, 246, 0.25);">AI, Backend & Automation</span>
+                        <span class="tech-badge" data-i18n="tech.python.tag" style="display: inline-block; line-height: 1.3; background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 6px 12px; border-radius: 6px; font-size: 0.95rem; font-weight: bold; border: 1px solid rgba(59, 130, 246, 0.25);">AI, Backend & Automation</span>
                     </div>
                 </div>
                 <p data-i18n="tech.python.desc" style="font-size: 1.15rem; line-height: 1.8; color: #e2e8f0; flex-grow: 1;">Core language in my stack for building high-performance backends with FastAPI, RAG architectures with LangChain, intelligent AI agents, and complex data engineering and automation scripts.</p>
@@ -1181,6 +1187,7 @@
             "certs.desc6": "Comprehensive 77.5-hour training in intelligent process automation using n8n, integrating AI agents, LLMs, and scalable workflows.",
             "tech.title": "My <span>Technologies</span>",
             "tech.desc": "Tools and platforms I master to build robust automation and data solutions.",
+            "tech.n8n.tag": "Workflow Automation",
             "tech.n8n.desc": "Advanced workflow automation tool. I use it to integrate APIs, databases, and AI models seamlessly, building scalable data pipelines and business process automations without extensive boilerplate code.",
             "tech.python.tag": "AI, Backend & Automation",
             "tech.python.desc": "Core language in my stack for building high-performance backends with FastAPI, RAG architectures with LangChain, intelligent AI agents, and complex data engineering and automation scripts.",
@@ -1234,6 +1241,7 @@
             "certs.desc6": "Formação intensiva de 77,5 horas em automação inteligente de processos com n8n, integrando agentes de IA, LLMs e fluxos escaláveis.",
             "tech.title": "Minhas <span>Tecnologias</span>",
             "tech.desc": "Ferramentas e plataformas que domino para construir soluções robustas de dados e automação.",
+            "tech.n8n.tag": "Automação de Fluxos",
             "tech.n8n.desc": "Ferramenta avançada de automação de fluxos de trabalho. Utilizo para integrar APIs, bancos de dados e modelos de IA de forma contínua, construindo pipelines de dados escaláveis e automações de processos sem excesso de código.",
             "tech.python.tag": "IA, Backend & Automação",
             "tech.python.desc": "Linguagem principal da minha stack para construção de backends de alta performance com FastAPI, arquiteturas RAG com LangChain, agentes inteligentes de IA e scripts avançados de dados e automação.",
