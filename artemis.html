@@ -1,25 +1,27 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artemis 2.0 - Galeria</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             min-height: 100%;
             font-family: 'Inter Tight', sans-serif;
-            background-color: #0f172a; 
+            background-color: #0f172a;
             background-image: url('images/artemis_background.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             color: white;
         }
+
         .overlay {
             background: rgba(15, 23, 42, 0.4);
             backdrop-filter: blur(4px);
@@ -27,10 +29,12 @@
             min-height: 100vh;
             padding: 60px 20px;
         }
+
         .container {
             max-width: 1100px;
             margin: 0 auto;
         }
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -39,14 +43,16 @@
             flex-wrap: wrap;
             gap: 20px;
         }
-        h1 { 
-            margin: 0; 
-            font-size: 2.8rem; 
+
+        h1 {
+            margin: 0;
+            font-size: 2.8rem;
             background: linear-gradient(to right, #a855f7, #3b82f6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 700;
         }
+
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -59,19 +65,23 @@
             border-radius: 8px;
             border: 1px solid rgba(168, 85, 247, 0.3);
         }
+
         .back-btn:hover {
             background: rgba(168, 85, 247, 0.2);
             transform: translateX(-5px);
             box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
         }
+
         .back-btn svg {
             margin-right: 8px;
         }
+
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
         }
+
         .image-card {
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -85,14 +95,16 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             overflow: hidden;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             cursor: pointer;
         }
+
         .image-card:hover {
             border-color: rgba(168, 85, 247, 0.6);
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(168, 85, 247, 0.25);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 85, 247, 0.25);
         }
+
         .image-card img {
             width: 100%;
             height: 100%;
@@ -100,6 +112,7 @@
             border-radius: 12px;
             transition: transform 0.35s ease;
         }
+
         .image-card:hover img {
             transform: scale(1.03);
         }
@@ -116,9 +129,11 @@
             align-items: center;
             padding: 20px;
         }
+
         .lightbox.active {
             display: flex;
         }
+
         .lightbox img {
             max-width: 95%;
             max-height: 90vh;
@@ -127,6 +142,7 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
             object-fit: contain;
         }
+
         .lightbox-close {
             position: fixed;
             top: 24px;
@@ -144,43 +160,56 @@
             justify-content: center;
             transition: all 0.2s;
         }
+
         .lightbox-close:hover {
             background: rgba(168, 85, 247, 0.3);
         }
 
         @media (max-width: 768px) {
-            body, html {
+
+            body,
+            html {
                 background-attachment: scroll;
             }
+
             .overlay {
                 padding: 30px 16px;
             }
+
             h1 {
                 font-size: 2rem;
             }
+
             .gallery-grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
             }
+
             .image-card {
                 height: 210px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="overlay">
         <div class="container">
             <div class="header">
                 <h1>Artemis 2.0</h1>
                 <a href="index.html#projetos" class="back-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
                     Voltar ao Portfólio
                 </a>
             </div>
-            
+
             <p style="color: #cbd5e1; margin-bottom: 40px; font-size: 1.1rem; line-height: 1.6; max-width: 800px;">
-                Capturas de tela da interface e das funcionalidades em tempo real do assistente virtual <strong>Artemis 2.0</strong>. Toque ou clique em qualquer imagem para ampliar.
+                Capturas de tela da interface e das funcionalidades em tempo real do assistente virtual <strong>Artemis
+                    2.0</strong>. Toque ou clique em qualquer imagem para ampliar.
             </p>
 
             <div class="gallery-grid">
@@ -188,13 +217,15 @@
                     <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial" loading="lazy">
                 </div>
                 <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
-                    <img src="images/artemis_sugestoes_rapidas.png" alt="Artemis 2.0 - Sugestões Rápidas" loading="lazy">
+                    <img src="images/artemis_sugestoes_rapidas.png" alt="Artemis 2.0 - Sugestões Rápidas"
+                        loading="lazy">
                 </div>
                 <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
                     <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat" loading="lazy">
                 </div>
                 <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
-                    <img src="images/artemis_resposta_tempo_real.png" alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
+                    <img src="images/artemis_resposta_tempo_real.png" alt="Artemis 2.0 - Resposta em Tempo Real"
+                        loading="lazy">
                 </div>
                 <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
                     <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias" loading="lazy">
@@ -229,4 +260,5 @@
         });
     </script>
 </body>
+
 </html>
