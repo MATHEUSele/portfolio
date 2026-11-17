@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -33,7 +35,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             flex-wrap: wrap;
             gap: 20px;
         }
@@ -67,14 +69,14 @@
         }
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
         }
         .image-card {
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            height: 250px;
+            height: 240px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -84,23 +86,68 @@
             overflow: hidden;
             position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            cursor: pointer;
         }
         .image-card:hover {
-            border-color: rgba(168, 85, 247, 0.5);
+            border-color: rgba(168, 85, 247, 0.6);
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(168, 85, 247, 0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(168, 85, 247, 0.25);
         }
-        /* Configuração para a imagem preencher o card quando colocada */
         .image-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 12px;
+            transition: transform 0.35s ease;
         }
-        .placeholder-text {
-            font-size: 0.9rem;
-            opacity: 0.7;
+        .image-card:hover img {
+            transform: scale(1.03);
         }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 12px;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            object-fit: contain;
+        }
+        .lightbox-close {
+            position: fixed;
+            top: 24px;
+            right: 28px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .lightbox-close:hover {
+            background: rgba(168, 85, 247, 0.3);
+        }
+
         @media (max-width: 768px) {
             body, html {
                 background-attachment: scroll;
@@ -115,6 +162,9 @@
                 grid-template-columns: 1fr;
                 gap: 16px;
             }
+            .image-card {
+                height: 210px;
+            }
         }
     </style>
 </head>
@@ -123,46 +173,60 @@
         <div class="container">
             <div class="header">
                 <h1>Artemis 2.0</h1>
-                <a href="index.html" class="back-btn">
+                <a href="index.html#projetos" class="back-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                     Voltar ao Portfólio
                 </a>
             </div>
             
             <p style="color: #cbd5e1; margin-bottom: 40px; font-size: 1.1rem; line-height: 1.6; max-width: 800px;">
-                Bem-vindo à galeria do Artemis 2.0. Aqui você pode exibir capturas de tela da interface e detalhes do projeto. Para adicionar suas imagens, basta substituir as divs <code>&lt;div class="image-card"&gt;</code> pelas suas tags <code>&lt;img&gt;</code> no código fonte deste arquivo (<code>artemis.html</code>).
+                Capturas de tela da interface e das funcionalidades em tempo real do assistente virtual <strong>Artemis 2.0</strong>. Toque ou clique em qualquer imagem para ampliar.
             </p>
 
             <div class="gallery-grid">
-                
-                <!-- Exemplo de como ficará depois que você colocar a imagem real: -->
-                <!-- 
-                <div class="image-card">
-                    <img src="images/print-artemis-1.jpg" alt="Interface Artemis">
-                </div> 
-                -->
-                
-                <div class="image-card">
-                    <span class="placeholder-text">Espaço para Imagem 1</span>
+                <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial" loading="lazy">
                 </div>
-                <div class="image-card">
-                    <span class="placeholder-text">Espaço para Imagem 2</span>
+                <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="images/artemis_sugestoes_rapidas.png" alt="Artemis 2.0 - Sugestões Rápidas" loading="lazy">
                 </div>
-                <div class="image-card">
-                    <span class="placeholder-text">Espaço para Imagem 3</span>
+                <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat" loading="lazy">
                 </div>
-                <div class="image-card">
-                    <span class="placeholder-text">Espaço para Imagem 4</span>
+                <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="images/artemis_resposta_tempo_real.png" alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
                 </div>
-                <div class="image-card">
-                    <span class="placeholder-text">Espaço para Imagem 5</span>
+                <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias" loading="lazy">
                 </div>
-                <div class="image-card">
-                    <span class="placeholder-text">Espaço para Imagem 6</span>
-                </div>
-                
             </div>
         </div>
     </div>
+
+    <!-- Lightbox para ampliar a imagem ao clicar -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" aria-label="Fechar">&times;</button>
+        <img id="lightboxImg" src="" alt="Imagem Ampliada" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
 </body>
 </html>
