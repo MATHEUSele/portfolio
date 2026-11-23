@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot WhatsApp Node.js - Demonstração Interativa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wa-bg-dark: #0c1317;
+            --wa-panel-bg: #111b21;
+            --wa-header-bg: #202c33;
+            --wa-chat-bg: #0b141a;
+            --wa-bubble-in: #202c33;
+            --wa-bubble-out: #005c4b;
+            --wa-text-primary: #e9edef;
+            --wa-text-secondary: #8696a0;
+            --wa-text-muted: #667781;
+            --wa-green: #25d366;
+            --wa-green-dark: #00a884;
+            --wa-border: rgba(134, 150, 160, 0.15);
+            --wa-blue-check: #53bdeb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            min-height: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter Tight', sans-serif;
+            background-color: var(--wa-bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(37, 211, 102, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 168, 132, 0.08) 0%, transparent 40%),
+                linear-gradient(135deg, #090e11 0%, #0c1317 100%);
+            color: var(--wa-text-primary);
+            overflow-x: hidden;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 20px 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        /* Top Header Bar */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .title-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .title-group h1 {
+            font-size: 2.1rem;
+            margin: 0;
+            background: linear-gradient(to right, #25d366, #4ade80, #86efac);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            color: #25d366;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: rgba(17, 27, 33, 0.9);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(37, 211, 102, 0.35);
+            font-size: 0.95rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(37, 211, 102, 0.16);
+            transform: translateX(-4px);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.25);
+        }
+
+        .back-btn svg {
+            margin-right: 8px;
+        }
+
+        /* WhatsApp Web Main Frame */
+        .whatsapp-frame {
+            background: var(--wa-panel-bg);
+            border: 1px solid var(--wa-border);
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 168, 132, 0.12);
+            display: flex;
+            height: 720px;
+            max-height: 82vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Left Panel - Chat List */
+        .wa-sidebar {
+            width: 380px;
+            background: var(--wa-panel-bg);
+            border-right: 1px solid var(--wa-border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .wa-sidebar-header {
+            height: 60px;
+            background: var(--wa-header-bg);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--wa-border);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #374248;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--wa-text-secondary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sidebar-icons {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: var(--wa-text-secondary);
+        }
+
+        .sidebar-icons svg {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .sidebar-icons svg:hover {
+            color: var(--wa-text-primary);
+        }
+
+        /* Notification Banner */
+        .wa-banner {
+            background: #182229;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid var(--wa-border);
+        }
+        .banner-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(37, 211, 102, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--wa-green);
+            flex-shrink: 0;
+        }
+        .banner-text {
+            font-size: 0.85rem;
+            line-height: 1.35;
+        }
+        .banner-text strong {
+            display: block;
+            color: var(--wa-text-primary);
+            font-size: 0.9rem;
+        }
+        .banner-text span {
+            color: var(--wa-text-secondary);
+        }
+
+        /* Search Bar */
+        .wa-search-box {
+            padding: 8px 14px;
+            background: var(--wa-panel-bg);
+            border-bottom: 1px solid var(--wa-border);
+        }
+        .search-inner {
+            background: #202c33;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            gap: 12px;
+        }
+        .search-inner svg {
+            color: var(--wa-text-secondary);
+        }
+        .search-inner input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--wa-text-primary);
+            font-size: 0.9rem;
+            width: 100%;
+            font-family: inherit;
+        }
+        .search-inner input::placeholder {
+            color: var(--wa-text-secondary);
+        }
+
+        /* Chat List Items */
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-bottom: 1px solid rgba(134, 150, 160, 0.08);
+            position: relative;
+        }
+        .chat-item:hover {
+            background: #202c33;
+        }
+        .chat-item.active {
+            background: #2a3942;
+        }
+
+        .chat-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #25d366;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b141a;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .chat-avatar.dev {
+            background: #3b82f6;
+            color: white;
+        }
+        .chat-avatar.support {
+            background: #f59e0b;
+            color: white;
+        }
+        .chat-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .online-dot {
+            width: 12px;
+            height: 12px;
+            background: #25d366;
+            border: 2px solid var(--wa-panel-bg);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .chat-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+        .chat-name {
+            font-size: 0.98rem;
+            font-weight: 600;
+            color: var(--wa-text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-time {
+            font-size: 0.75rem;
+            color: var(--wa-green);
+            font-weight: 500;
+        }
+        .chat-preview-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+        .chat-snippet {
+            font-size: 0.85rem;
+            color: var(--wa-text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .chat-badge {
+            background: var(--wa-green);
+            color: #0b141a;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 2px 7px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* Right Panel - Active Chat Window */
+        .wa-conversation {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--wa-chat-bg);
+            position: relative;
+        }
+
+        /* WhatsApp Chat Wallpaper Pattern */
+        .wa-conversation::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.055;
+            background-image: radial-gradient(#25d366 1px, transparent 1px), radial-gradient(#25d366 1px, var(--wa-chat-bg) 1px);
+            background-size: 28px 28px;
+            background-position: 0 0, 14px 14px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Active Chat Header */
+        .chat-active-header {
+            height: 60px;
+            background: var(--wa-header-bg);
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--wa-border);
+            z-index: 10;
+        }
+
+        .active-contact {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .mobile-back-to-list {
+            display: none;
+            cursor: pointer;
+            margin-right: 6px;
+            color: var(--wa-text-secondary);
+        }
+        .active-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #00a884;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            position: relative;
+        }
+        .active-contact-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .active-contact-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--wa-text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .verified-badge {
+            color: var(--wa-green);
+            display: inline-flex;
+        }
+        .active-contact-status {
+            font-size: 0.78rem;
+            color: var(--wa-text-secondary);
+        }
+        .active-contact-status.typing {
+            color: var(--wa-green);
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--wa-text-secondary);
+        }
+        .header-actions svg {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .header-actions svg:hover {
+            color: var(--wa-text-primary);
+        }
+
+        /* Chat Message Area */
+        .chat-feed {
+            flex: 1;
+            padding: 20px 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 5;
+            scroll-behavior: smooth;
+        }
+
+        .date-divider {
+            align-self: center;
+            background: #182229;
+            color: var(--wa-text-secondary);
+            font-size: 0.75rem;
+            padding: 5px 12px;
+            border-radius: 8px;
+            margin: 6px 0 12px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Message Bubbles */
+        .wa-bubble {
+            max-width: 75%;
+            padding: 8px 12px 6px;
+            border-radius: 8px;
+            font-size: 0.93rem;
+            line-height: 1.45;
+            position: relative;
+            word-wrap: break-word;
+            animation: bubbleIn 0.22s ease-out;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+        }
+
+        @keyframes bubbleIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .wa-bubble.in {
+            align-self: flex-start;
+            background: var(--wa-bubble-in);
+            border-top-left-radius: 0;
+            color: var(--wa-text-primary);
+        }
+        .wa-bubble.out {
+            align-self: flex-end;
+            background: var(--wa-bubble-out);
+            border-top-right-radius: 0;
+            color: var(--wa-text-primary);
+        }
+
+        .bubble-meta {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            font-size: 0.7rem;
+            color: var(--wa-text-secondary);
+            margin-top: 4px;
+            float: right;
+            margin-left: 10px;
+        }
+        .bubble-checks {
+            color: var(--wa-blue-check);
+            display: inline-flex;
+        }
+
+        /* Interactive Action Buttons inside Message */
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .menu-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(37, 211, 102, 0.35);
+            color: #4ade80;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .menu-btn:hover {
+            background: rgba(37, 211, 102, 0.2);
+            color: #ffffff;
+            border-color: var(--wa-green);
+            transform: translateX(3px);
+        }
+
+        /* Node.js code block preview in WhatsApp */
+        .code-box {
+            background: #090e11;
+            border: 1px solid rgba(37, 211, 102, 0.25);
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 8px;
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 0.82rem;
+            color: #86efac;
+            overflow-x: auto;
+        }
+
+        /* Quick Reply Action Chips (above input) */
+        .quick-chips-bar {
+            padding: 8px 16px;
+            background: #182229;
+            border-top: 1px solid var(--wa-border);
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            z-index: 10;
+        }
+        .quick-chip {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(134, 150, 160, 0.25);
+            color: var(--wa-text-primary);
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.82rem;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .quick-chip:hover {
+            background: rgba(37, 211, 102, 0.2);
+            border-color: var(--wa-green);
+            color: var(--wa-green);
+        }
+
+        /* Bottom Input Bar */
+        .chat-input-bar {
+            height: 62px;
+            background: var(--wa-header-bg);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-top: 1px solid var(--wa-border);
+            z-index: 10;
+        }
+
+        .input-icons {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--wa-text-secondary);
+        }
+        .input-icons svg {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .input-icons svg:hover {
+            color: var(--wa-text-primary);
+        }
+
+        .wa-input-wrapper {
+            flex: 1;
+            background: #2a3942;
+            border-radius: 8px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .wa-text-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--wa-text-primary);
+            font-size: 0.94rem;
+            font-family: inherit;
+        }
+        .wa-text-input::placeholder {
+            color: var(--wa-text-secondary);
+        }
+
+        .send-action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--wa-text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .send-action-btn.has-text {
+            background: var(--wa-green);
+            color: #0b141a;
+        }
+        .send-action-btn.has-text:hover {
+            background: #20ba59;
+            transform: scale(1.05);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 820px) {
+            .page-wrapper {
+                padding: 12px 8px;
+            }
+            .top-nav {
+                margin-bottom: 12px;
+            }
+            .title-group h1 {
+                font-size: 1.6rem;
+            }
+            .whatsapp-frame {
+                height: 85vh;
+                border-radius: 8px;
+            }
+            .wa-sidebar {
+                width: 100%;
+            }
+            .wa-conversation {
+                width: 100%;
+                display: none;
+            }
+            /* When chat is active on mobile */
+            .whatsapp-frame.show-chat .wa-sidebar {
+                display: none;
+            }
+            .whatsapp-frame.show-chat .wa-conversation {
+                display: flex;
+            }
+            .mobile-back-to-list {
+                display: flex;
+            }
+            .wa-bubble {
+                max-width: 88%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            
+            <!-- Top Navigation Header -->
+            <div class="top-nav">
+                <div class="title-group">
+                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                    <h1>WhatsApp Chatbot (Node.js)</h1>
+                </div>
+                <a href="index.html#projetos" class="back-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Voltar ao Portfólio
+                </a>
+            </div>
+
+            <!-- Main WhatsApp Web Desktop Frame -->
+            <div class="whatsapp-frame show-chat" id="waFrame">
+
+                <!-- Left Sidebar: Chats -->
+                <div class="wa-sidebar">
+                    <div class="wa-sidebar-header">
+                        <div class="user-avatar" title="Seu Perfil">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                        </div>
+                        <div class="sidebar-icons">
+                            <!-- Status stories icon -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="9"/>
+                                <path d="M12 3a9 9 0 0 1 9 9"/>
+                            </svg>
+                            <!-- New chat icon -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                            </svg>
+                            <!-- Menu icon -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="5" r="2"/>
+                                <circle cx="12" cy="12" r="2"/>
+                                <circle cx="12" cy="19" r="2"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Notification Banner -->
+                    <div class="wa-banner">
+                        <div class="banner-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                            </svg>
+                        </div>
+                        <div class="banner-text">
+                            <strong>Chatbot Node.js Ativo</strong>
+                            <span>Respostas instantâneas e automação 24/7 ligadas</span>
+                        </div>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="wa-search-box">
+                        <div class="search-inner">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <input type="text" placeholder="Pesquisar ou começar uma nova conversa" id="chatSearch">
+                        </div>
+                    </div>
+
+                    <!-- Chat List Items -->
+                    <div class="chat-list">
+                        <!-- Active Bot Chat -->
+                        <div class="chat-item active" onclick="openChat('bot')">
+                            <div class="chat-avatar">
+                                🤖
+                                <span class="online-dot"></span>
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-title-row">
+                                    <span class="chat-name">Matheus Bot • Atendimento</span>
+                                    <span class="chat-time" id="sidebarTime">Agora</span>
+                                </div>
+                                <div class="chat-preview-row">
+                                    <span class="chat-snippet" id="sidebarSnippet">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#53bdeb" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Digite uma opção para testar...
+                                    </span>
+                                    <span class="chat-badge">1</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Matheus Personal Contact -->
+                        <div class="chat-item" onclick="selectContact('matheus')">
+                            <div class="chat-avatar dev">
+                                ME
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-title-row">
+                                    <span class="chat-name">Matheus Eleoterio (Dev)</span>
+                                    <span class="chat-time" style="color: var(--wa-text-secondary);">14:32</span>
+                                </div>
+                                <div class="chat-preview-row">
+                                    <span class="chat-snippet">Bora agendar uma conversa sobre a vaga!</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Support Team -->
+                        <div class="chat-item" onclick="selectContact('support')">
+                            <div class="chat-avatar support">
+                                ⚡
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-title-row">
+                                    <span class="chat-name">Suporte & Integrações API</span>
+                                    <span class="chat-time" style="color: var(--wa-text-secondary);">Ontem</span>
+                                </div>
+                                <div class="chat-preview-row">
+                                    <span class="chat-snippet">Webhook Node.js sincronizado com sucesso.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Conversation Window -->
+                <div class="wa-conversation">
+                    
+                    <!-- Chat Header -->
+                    <div class="chat-active-header">
+                        <div class="active-contact" onclick="toggleMobileView()">
+                            <span class="mobile-back-to-list" title="Voltar para lista">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            </span>
+                            <div class="active-avatar">
+                                🤖
+                            </div>
+                            <div class="active-contact-info">
+                                <div class="active-contact-name">
+                                    <span>Matheus Bot • Atendimento 24/7</span>
+                                    <span class="verified-badge" title="Bot Oficial Verificado">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                    </span>
+                                </div>
+                                <span class="active-contact-status" id="botStatus">online</span>
+                            </div>
+                        </div>
+
+                        <div class="header-actions">
+                            <!-- Search in chat -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <!-- Attachment clip -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                            <!-- Menu -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages Feed -->
+                    <div class="chat-feed" id="chatFeed">
+                        <div class="date-divider">HOJE</div>
+                        
+                        <!-- Initial Bot Greeting Bubble -->
+                        <div class="wa-bubble in">
+                            Olá! 👋 Bem-vindo ao canal oficial de demonstração do **Chatbot WhatsApp em Node.js** construído por Matheus Eleoterio.<br><br>
+                            Este bot automatiza atendimentos 24/7, responde dúvidas frequentes e direciona clientes de forma inteligente.<br><br>
+                            👉 <strong>Selecione uma opção abaixo ou digite o número correspondente:</strong>
+                            <div class="menu-options">
+                                <button class="menu-btn" onclick="sendQuickOption('1')">
+                                    <span>1️⃣ Conhecer Projetos em Destaque</span>
+                                    <span>›</span>
+                                </button>
+                                <button class="menu-btn" onclick="sendQuickOption('2')">
+                                    <span>2️⃣ Tech Stack & Especialidades</span>
+                                    <span>›</span>
+                                </button>
+                                <button class="menu-btn" onclick="sendQuickOption('3')">
+                                    <span>3️⃣ Como este Bot foi desenvolvido</span>
+                                    <span>›</span>
+                                </button>
+                                <button class="menu-btn" onclick="sendQuickOption('4')">
+                                    <span>4️⃣ Falar Diretamente com Matheus</span>
+                                    <span>›</span>
+                                </button>
+                                <button class="menu-btn" onclick="sendQuickOption('5')">
+                                    <span>5️⃣ Solicitar Proposta / Conexão</span>
+                                    <span>›</span>
+                                </button>
+                            </div>
+                            <div class="bubble-meta">
+                                <span class="msg-time">10:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Suggestions Chips Bar -->
+                    <div class="quick-chips-bar">
+                        <button class="quick-chip" onclick="sendQuickOption('1')">1. Projetos</button>
+                        <button class="quick-chip" onclick="sendQuickOption('2')">2. Tech Stack</button>
+                        <button class="quick-chip" onclick="sendQuickOption('3')">3. Arquitetura Node.js</button>
+                        <button class="quick-chip" onclick="sendQuickOption('4')">4. Contato Direto</button>
+                        <button class="quick-chip" onclick="sendQuickOption('5')">5. Proposta</button>
+                        <button class="quick-chip" onclick="sendQuickOption('menu')">Menu Principal</button>
+                    </div>
+
+                    <!-- Bottom Input Bar -->
+                    <form class="chat-input-bar" id="chatInputForm" onsubmit="handleSend(event)">
+                        <div class="input-icons">
+                            <!-- Emoji Icon -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                            <!-- Attachment Clip -->
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                        </div>
+
+                        <div class="wa-input-wrapper">
+                            <input type="text" id="messageInput" class="wa-text-input" placeholder="Digite uma mensagem ou número (1 a 5)..." autocomplete="off">
+                        </div>
+
+                        <button type="submit" class="send-action-btn" id="sendBtn" title="Enviar mensagem">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z"/>
+                            </svg>
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const chatFeed = document.getElementById('chatFeed');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const botStatus = document.getElementById('botStatus');
+        const sidebarSnippet = document.getElementById('sidebarSnippet');
+        const sidebarTime = document.getElementById('sidebarTime');
+        const waFrame = document.getElementById('waFrame');
+
+        function getCurrentTime() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            return `${h}:${m}`;
+        }
+
+        // Initialize timestamps
+        document.querySelectorAll('.msg-time').forEach(el => {
+            el.innerText = getCurrentTime();
+        });
+        sidebarTime.innerText = getCurrentTime();
+
+        // Change microphone icon to send paper-plane when input has text
+        messageInput.addEventListener('input', () => {
+            const val = messageInput.value.trim();
+            if (val.length > 0) {
+                sendBtn.classList.add('has-text');
+                sendBtn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                `;
+            } else {
+                sendBtn.classList.remove('has-text');
+                sendBtn.innerHTML = `
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z"/>
+                    </svg>
+                `;
+            }
+        });
+
+        function scrollToBottom() {
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+        }
+
+        function appendUserMessage(text) {
+            const time = getCurrentTime();
+            const bubble = document.createElement('div');
+            bubble.className = 'wa-bubble out';
+            bubble.innerHTML = `
+                ${escapeHtml(text)}
+                <div class="bubble-meta">
+                    <span>${time}</span>
+                    <span class="bubble-checks">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="18 6 7 17 2 12"/>
+                            <polyline points="22 10 13 19 11 17"/>
+                        </svg>
+                    </span>
+                </div>
+            `;
+            chatFeed.appendChild(bubble);
+            scrollToBottom();
+
+            // Update sidebar
+            sidebarSnippet.innerHTML = `
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#53bdeb" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                ${escapeHtml(text.substring(0, 30))}
+            `;
+            sidebarTime.innerText = time;
+        }
+
+        function appendBotMessage(htmlContent) {
+            const time = getCurrentTime();
+            const bubble = document.createElement('div');
+            bubble.className = 'wa-bubble in';
+            bubble.innerHTML = `
+                ${htmlContent}
+                <div class="bubble-meta">
+                    <span>${time}</span>
+                </div>
+            `;
+            chatFeed.appendChild(bubble);
+            scrollToBottom();
+
+            sidebarTime.innerText = time;
+        }
+
+        function setTyping(isTyping) {
+            if (isTyping) {
+                botStatus.innerText = 'digitando...';
+                botStatus.classList.add('typing');
+            } else {
+                botStatus.innerText = 'online';
+                botStatus.classList.remove('typing');
+            }
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Automated responses based on user input
+        function processBotReply(input) {
+            setTyping(true);
+            const lower = input.trim().toLowerCase();
+
+            setTimeout(() => {
+                setTyping(false);
+
+                if (lower === '1' || lower.includes('projeto') || lower.includes('projetos')) {
+                    appendBotMessage(`
+                        🚀 <strong>Projetos em Destaque de Matheus:</strong><br><br>
+                        1. <strong>Artemis 2.0 (Assistente IA):</strong><br>
+                        Assistente com Google Gemini, FastAPI, WebSockets em tempo real e interface moderna em React.<br>
+                        🔗 <a href="artemis.html" style="color: #4ade80;">Ver Galeria do Artemis</a><br><br>
+                        2. <strong>Chatbot WhatsApp Node.js:</strong><br>
+                        Solução escalável para automação de atendimento a clientes 24/7.<br>
+                        🔗 <a href="https://github.com/MATHEUSele/chatbot-project" target="_blank" style="color: #4ade80;">Ver Repositório GitHub</a><br><br>
+                        3. <strong>Sistema Acadêmico Java:</strong><br>
+                        Gestão acadêmica completa desenvolvida em Java e MySQL.<br><br>
+                        Digite <strong>"menu"</strong> para voltar às opções.
+                    `);
+                } else if (lower === '2' || lower.includes('tech') || lower.includes('stack') || lower.includes('habilidade')) {
+                    appendBotMessage(`
+                        💻 <strong>Tech Stack de Matheus:</strong><br><br>
+                        • <strong>Backend & Automação:</strong> Python, Node.js, FastAPI, n8n.<br>
+                        • <strong>Inteligência Artificial:</strong> LLMs, RAG Architecture, LangChain, Google Gemini API.<br>
+                        • <strong>Banco de Dados & Infra:</strong> MySQL, Docker, Git, Linux.<br>
+                        • <strong>Formação:</strong> Sistemas de Informação na UFPB & Estágio na Petrobras.<br><br>
+                        🔗 <a href="python.html" style="color: #4ade80;">Testar Demonstração Interativa Python</a>
+                    `);
+                } else if (lower === '3' || lower.includes('como') || lower.includes('bot') || lower.includes('node') || lower.includes('arquitetura')) {
+                    appendBotMessage(`
+                        ⚙️ <strong>Como este Chatbot foi desenvolvido em Node.js:</strong><br><br>
+                        Este bot foi arquitetado em <strong>Node.js (JavaScript ES6+)</strong> com foco em alta disponibilidade e baixa latência:<br>
+                        • <strong>Engine:</strong> Conexão via protocolo WhatsApp Web socket (WPPConnect / Baileys).<br>
+                        • <strong>Máquina de Estados:</strong> Fluxo conversacional ramificado que guarda a sessão do cliente.<br>
+                        • <strong>Webhook de Transbordo:</strong> Se o cliente pede atendimento humano, dispara webhook de notificação.<br>
+                        <div class="code-box">
+// Exemplo de Handler de Mensagens em Node.js
+client.onMessage(async (message) => {
+  const userText = message.body.trim();
+  const reply = router.resolveIntent(userText);
+  await client.sendText(message.from, reply);
+});
+                        </div>
+                    `);
+                } else if (lower === '4' || lower.includes('falar') || lower.includes('contato') || lower.includes('matheus') || lower.includes('email') || lower.includes('linkedin')) {
+                    appendBotMessage(`
+                        📬 <strong>Contatos Oficiais de Matheus:</strong><br><br>
+                        • <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/matheus-eleoterio-65ab752b6" target="_blank" style="color: #4ade80;">linkedin.com/in/matheus-eleoterio</a><br>
+                        • <strong>GitHub:</strong> <a href="https://github.com/MATHEUSele" target="_blank" style="color: #4ade80;">github.com/MATHEUSele</a><br>
+                        • <strong>E-mail:</strong> <a href="mailto:matheus.eleoterio@dcx.ufpb.br" style="color: #4ade80;">matheus.eleoterio@dcx.ufpb.br</a><br>
+                        • <strong>Instagram:</strong> <a href="https://www.instagram.com/matheus.eleoterio/" target="_blank" style="color: #4ade80;">@matheus.eleoterio</a><br><br>
+                        Fique à vontade para mandar uma mensagem!
+                    `);
+                } else if (lower === '5' || lower.includes('proposta') || lower.includes('orcamento') || lower.includes('vaga') || lower.includes('contratar')) {
+                    appendBotMessage(`
+                        🤝 <strong>Solicitação de Proposta / Oportunidade:</strong><br><br>
+                        Matheus está disponível para oportunidades e projetos envolvendo:<br>
+                        • Desenvolvimento de IA Aplicada & RAG<br>
+                        • Automação de Processos com n8n & Python<br>
+                        • Backends escaláveis (FastAPI / Node.js)<br><br>
+                        Para enviar detalhes do projeto ou agendar uma reunião, entre em contato direto pelo e-mail: <strong>matheus.eleoterio@dcx.ufpb.br</strong> ou pelo LinkedIn!
+                    `);
+                } else {
+                    appendBotMessage(`
+                        Recebi sua mensagem: <em>"${escapeHtml(input)}"</em>.<br><br>
+                        Como sou um bot de demonstração configurado em Node.js, você pode digitar os números abaixo para navegar pelas respostas automáticas:
+                        <div class="menu-options">
+                            <button class="menu-btn" onclick="sendQuickOption('1')"><span>1️⃣ Projetos em Destaque</span><span>›</span></button>
+                            <button class="menu-btn" onclick="sendQuickOption('2')"><span>2️⃣ Tech Stack</span><span>›</span></button>
+                            <button class="menu-btn" onclick="sendQuickOption('3')"><span>3️⃣ Como o Bot foi feito</span><span>›</span></button>
+                            <button class="menu-btn" onclick="sendQuickOption('4')"><span>4️⃣ Falar com Matheus</span><span>›</span></button>
+                            <button class="menu-btn" onclick="sendQuickOption('5')"><span>5️⃣ Proposta / Vaga</span><span>›</span></button>
+                        </div>
+                    `);
+                }
+            }, 750);
+        }
+
+        function handleSend(e) {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            appendUserMessage(text);
+            messageInput.value = '';
+            messageInput.dispatchEvent(new Event('input'));
+
+            processBotReply(text);
+        }
+
+        function sendQuickOption(opt) {
+            let label = opt;
+            if (opt === '1') label = '1. Projetos em Destaque';
+            else if (opt === '2') label = '2. Tech Stack & Especialidades';
+            else if (opt === '3') label = '3. Arquitetura do Bot Node.js';
+            else if (opt === '4') label = '4. Contato Direto com Matheus';
+            else if (opt === '5') label = '5. Solicitar Proposta / Oportunidade';
+            else if (opt === 'menu') label = 'Menu Principal';
+
+            appendUserMessage(label);
+            processBotReply(opt);
+        }
+
+        function toggleMobileView() {
+            waFrame.classList.toggle('show-chat');
+        }
+
+        function openChat(type) {
+            waFrame.classList.add('show-chat');
+        }
+
+        function selectContact(contact) {
+            if (contact === 'matheus') {
+                appendUserMessage("Oi Matheus! Vim pelo seu portfólio.");
+                processBotReply('4');
+            } else if (contact === 'support') {
+                appendUserMessage("Olá, como funcionam as integrações?");
+                processBotReply('3');
+            }
+            waFrame.classList.add('show-chat');
+        }
+    </script>
+</body>
+</html>
