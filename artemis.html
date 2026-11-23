@@ -16,6 +16,7 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border-subtle: rgba(255, 255, 255, 0.14);
+            --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         * {
@@ -121,15 +122,25 @@
             transform: translateX(-3px);
         }
 
-        /* Hero + 3D Mosaic Stage */
+        /* Hero + Dual Stage */
         .hero-stage {
             position: relative;
             flex: 1;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            justify-content: center;
             min-height: calc(100vh - 76px);
             overflow: hidden;
             padding: 48px;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 20;
+            width: 100%;
+            max-width: 1180px;
+            margin: 0 auto;
+            pointer-events: none;
         }
 
         /* Dark gradient behind left hero text */
@@ -137,21 +148,18 @@
             position: absolute;
             inset: 0;
             background: linear-gradient(90deg,
-                    rgba(9, 13, 22, 0.95) 0%,
-                    rgba(9, 13, 22, 0.85) 36%,
+                    rgba(9, 13, 22, 0.96) 0%,
+                    rgba(9, 13, 22, 0.86) 36%,
                     rgba(9, 13, 22, 0.28) 65%,
                     rgba(9, 13, 22, 0.15) 100%);
             z-index: 10;
             pointer-events: none;
-            transition: opacity 0.35s ease;
+            transition: opacity 0.55s var(--ease-fluid);
         }
 
         .hero-stage.grid-view {
-            flex-direction: column;
-            align-items: stretch;
-            overflow: visible;
-            gap: 40px;
-            padding-bottom: 80px;
+            overflow-y: visible;
+            padding-bottom: 84px;
         }
 
         .hero-stage.grid-view .hero-backdrop-gradient {
@@ -161,15 +169,13 @@
         /* Left Hero Content */
         .hero-content {
             position: relative;
-            z-index: 20;
             max-width: 540px;
             pointer-events: none;
+            transition: max-width 0.6s var(--ease-fluid), transform 0.65s var(--ease-fluid);
         }
 
         .hero-stage.grid-view .hero-content {
-            max-width: 1120px;
-            width: 100%;
-            margin: 0 auto;
+            max-width: 720px;
         }
 
         .hero-title {
@@ -197,7 +203,7 @@
             color: var(--text-muted);
             font-size: 1.08rem;
             line-height: 1.65;
-            max-width: 470px;
+            max-width: 500px;
         }
 
         .hero-desc strong {
@@ -258,11 +264,19 @@
             transform: translateY(-2px);
         }
 
+        .btn-secondary svg {
+            transition: transform 0.45s var(--ease-fluid);
+        }
+
+        .hero-stage.grid-view .btn-secondary svg {
+            transform: rotate(90deg);
+        }
+
         .hero-metrics {
             display: flex;
             align-items: center;
             gap: 36px;
-            margin-top: 48px;
+            margin-top: 40px;
             padding-top: 24px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             max-width: 440px;
@@ -286,41 +300,101 @@
             color: var(--text-muted);
         }
 
-        /* 3D Tilted Mosaic Stage */
+        /* =========================================================
+           3D Tilted Mosaic Stage with Counter-Scrolling Columns
+           ========================================================= */
         .mosaic-stage {
             position: absolute;
-            top: -8%;
+            top: -6%;
             right: -6%;
-            bottom: -8%;
+            bottom: -6%;
             left: 34%;
             perspective: 1400px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             z-index: 5;
-            overflow: visible;
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: opacity 0.55s var(--ease-fluid), visibility 0.55s var(--ease-fluid);
+        }
+
+        .hero-stage.grid-view .mosaic-stage {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
 
         .mosaic-wall {
             display: grid;
             grid-template-columns: repeat(3, minmax(260px, 320px));
             gap: 20px;
-            transform: rotateX(14deg) rotateY(-16deg) rotateZ(4deg);
+            transform: rotateX(14deg) rotateY(-16deg) rotateZ(4deg) scale(1);
             transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            padding: 20px;
+            transition: transform 0.65s var(--ease-fluid);
+            padding: 0 20px;
+            align-items: start;
+        }
+
+        .hero-stage.grid-view .mosaic-wall {
+            transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(0.92) translateY(20px);
         }
 
         .mosaic-col {
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .mosaic-col:hover {
+            z-index: 25;
+        }
+
+        .mosaic-col-track {
             display: flex;
             flex-direction: column;
             gap: 20px;
             transform-style: preserve-3d;
+            will-change: transform;
         }
 
-        /* Staggered middle column for authentic Herdr wall cadence */
-        .mosaic-col.col-middle {
-            transform: translateY(-40px);
+        @keyframes scrollUp {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(0, calc(-50% - 10px), 0);
+            }
+        }
+
+        @keyframes scrollDown {
+            0% {
+                transform: translate3d(0, calc(-50% - 10px), 0);
+            }
+
+            100% {
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        .mosaic-col-track.col-down {
+            animation: scrollDown 36s linear infinite;
+        }
+
+        .mosaic-col-track.col-up {
+            animation: scrollUp 33s linear infinite;
+        }
+
+        .mosaic-col-track.col-down-slow {
+            animation: scrollDown 40s linear infinite;
+        }
+
+        .mosaic-col:hover .mosaic-col-track {
+            animation-play-state: paused;
         }
 
         /* Window Tile Card */
@@ -332,7 +406,7 @@
             cursor: pointer;
             position: relative;
             box-shadow: 0 14px 34px rgba(0, 0, 0, 0.65);
-            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+            transition: transform 0.28s var(--ease-fluid),
                 box-shadow 0.28s ease,
                 border-color 0.28s ease,
                 filter 0.28s ease;
@@ -413,39 +487,79 @@
             transform: scale(1.03);
         }
 
-        /* Flat Grid View Toggle Mode */
-        .hero-stage.grid-view .mosaic-stage {
-            position: relative;
-            inset: auto;
-            perspective: none;
-            max-width: 1120px;
-            width: 100%;
-            margin: 0 auto;
-            z-index: 20;
+        /* =========================================================
+           Dedicated Flat Grid Showcase with Choreographed Reveal
+           ========================================================= */
+        .grid-collapse {
+            display: grid;
+            grid-template-rows: 0fr;
+            opacity: 0;
+            transform: translateY(28px) scale(0.97);
+            pointer-events: none;
+            margin-top: 0;
+            transition: grid-template-rows 0.65s var(--ease-fluid),
+                opacity 0.5s var(--ease-fluid),
+                transform 0.65s var(--ease-fluid),
+                margin-top 0.65s var(--ease-fluid);
         }
 
-        .hero-stage.grid-view .mosaic-wall {
+        .grid-collapse-inner {
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .hero-stage.grid-view .grid-collapse {
+            grid-template-rows: 1fr;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+            margin-top: 36px;
+        }
+
+        .grid-showcase {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
-            width: 100%;
-            transform: none;
-            padding: 0;
+            padding: 12px 8px 24px;
         }
 
-        .hero-stage.grid-view .mosaic-col {
-            display: contents;
+        .grid-showcase .tile {
+            opacity: 0;
+            transform: translateY(24px) scale(0.96);
+            transition: opacity 0.45s var(--ease-fluid),
+                transform 0.55s var(--ease-fluid),
+                box-shadow 0.28s ease,
+                border-color 0.28s ease,
+                filter 0.28s ease;
         }
 
-        .hero-stage.grid-view .mosaic-col.col-middle {
-            transform: none;
+        .hero-stage.grid-view .grid-showcase .tile {
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
 
-        .hero-stage.grid-view .tile-extra {
-            display: none;
+        .hero-stage.grid-view .grid-showcase .tile:nth-child(1) {
+            transition-delay: 0.08s, 0.08s, 0s, 0s, 0s;
         }
 
-        .hero-stage.grid-view .tile:hover {
+        .hero-stage.grid-view .grid-showcase .tile:nth-child(2) {
+            transition-delay: 0.14s, 0.14s, 0s, 0s, 0s;
+        }
+
+        .hero-stage.grid-view .grid-showcase .tile:nth-child(3) {
+            transition-delay: 0.20s, 0.20s, 0s, 0s, 0s;
+        }
+
+        .hero-stage.grid-view .grid-showcase .tile:nth-child(4) {
+            transition-delay: 0.26s, 0.26s, 0s, 0s, 0s;
+        }
+
+        .hero-stage.grid-view .grid-showcase .tile:nth-child(5) {
+            transition-delay: 0.32s, 0.32s, 0s, 0s, 0s;
+        }
+
+        .hero-stage.grid-view .grid-showcase .tile:hover {
+            transition-delay: 0s;
             transform: scale(1.04) translateY(-6px);
         }
 
@@ -600,11 +714,10 @@
             }
 
             .hero-stage {
-                flex-direction: column;
-                align-items: stretch;
+                justify-content: flex-start;
                 padding: 32px 20px 80px;
                 min-height: auto;
-                gap: 36px;
+                gap: 28px;
                 overflow: hidden;
             }
 
@@ -633,31 +746,35 @@
                 top: auto;
                 bottom: auto;
                 perspective: 1100px;
-                padding: 20px 0;
+                height: 440px;
+                padding: 8px 0;
+                transition: opacity 0.45s var(--ease-fluid),
+                    height 0.55s var(--ease-fluid),
+                    padding 0.55s var(--ease-fluid),
+                    visibility 0.45s;
+            }
+
+            .hero-stage.grid-view .mosaic-stage {
+                height: 0;
+                padding: 0;
             }
 
             .mosaic-wall {
                 grid-template-columns: repeat(2, minmax(145px, 1fr));
                 gap: 14px;
-                transform: rotateX(10deg) rotateY(-8deg) rotateZ(2deg);
+                transform: rotateX(10deg) rotateY(-8deg) rotateZ(2deg) scale(1);
                 padding: 8px;
                 width: 100%;
-            }
-
-            .mosaic-col.col-middle {
-                transform: translateY(-16px);
             }
 
             .mosaic-col:nth-child(3) {
                 display: none;
             }
 
-            .hero-stage.grid-view .mosaic-col:nth-child(3) {
-                display: contents;
-            }
-
-            .hero-stage.grid-view .mosaic-wall {
+            .grid-showcase {
                 grid-template-columns: 1fr;
+                gap: 18px;
+                padding: 8px 2px 20px;
             }
 
             .click-hint {
@@ -678,6 +795,20 @@
 
             .lightbox-next {
                 right: 10px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .mosaic-col-track {
+                animation: none !important;
+            }
+
+            .mosaic-stage,
+            .mosaic-wall,
+            .grid-collapse,
+            .grid-showcase .tile,
+            .tile {
+                transition-duration: 0.15s !important;
             }
         }
     </style>
@@ -706,157 +837,465 @@
         <main class="hero-stage" id="heroStage">
             <div class="hero-backdrop-gradient" aria-hidden="true"></div>
 
-            <section class="hero-content">
-                <h1 class="hero-title">
-                    Artemis 2.0
-                    <span class="hero-subtitle">Assistente Virtual IA em tempo real.</span>
-                </h1>
+            <div class="hero-inner">
+                <section class="hero-content">
+                    <h1 class="hero-title">
+                        Artemis 2.0
+                        <span class="hero-subtitle">Assistente Virtual IA em tempo real.</span>
+                    </h1>
 
-                <p class="hero-desc">
-                    Arquitetura reconstruída do zero com React, Tailwind CSS, FastAPI e Google Gemini via WebSockets.
-                    <strong>Cada janela ao lado é a Artemis 2.0 em ação.</strong>
-                </p>
+                    <p class="hero-desc">
+                        Arquitetura reconstruída do zero com React, Tailwind CSS, FastAPI e Google Gemini via WebSockets.
+                        <strong>Cada janela ao lado é a Artemis 2.0 em ação.</strong>
+                    </p>
 
-                <div class="hero-actions">
-                    <a href="index.html#projetos" class="btn-primary">
-                        Voltar ao Portfólio
-                    </a>
-                    <button type="button" class="btn-secondary" id="toggleViewBtn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="14" width="7" height="7"></rect>
-                            <rect x="3" y="14" width="7" height="7"></rect>
-                        </svg>
-                        <span id="toggleViewLabel">Alternar Vista (3D / Grade)</span>
-                    </button>
+                    <div class="hero-actions">
+                        <a href="index.html#projetos" class="btn-primary">
+                            Voltar ao Portfólio
+                        </a>
+                        <button type="button" class="btn-secondary" id="toggleViewBtn" aria-pressed="false">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                            <span id="toggleViewLabel">Alternar Vista (3D / Grade)</span>
+                        </button>
+                    </div>
+
+                    <div class="hero-metrics">
+                        <div class="metric-item">
+                            <span class="metric-value">5</span>
+                            <span class="metric-label">Telas Reais</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value">&lt;50ms</span>
+                            <span class="metric-label">WebSockets</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value">2.0</span>
+                            <span class="metric-label">Gemini AI</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Grade Padrão Dedicada com Entrada Escalonada -->
+                <div class="grid-collapse" aria-hidden="true" id="gridCollapse">
+                    <div class="grid-collapse-inner">
+                        <section class="grid-showcase" aria-label="Grade de capturas da Artemis 2.0">
+                            <article class="tile" data-index="0">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Tela Inicial</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="1">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Sugestões Rápidas</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_sugestoes_rapidas.png"
+                                        alt="Artemis 2.0 - Sugestões Rápidas" loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="2">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Interação no Chat</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="3">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Resposta em Tempo Real</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_tempo_real.png"
+                                        alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="4">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Geração de Ideias</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
+                                        loading="lazy">
+                                </div>
+                            </article>
+                        </section>
+                    </div>
                 </div>
+            </div>
 
-                <div class="hero-metrics">
-                    <div class="metric-item">
-                        <span class="metric-value">5</span>
-                        <span class="metric-label">Telas Reais</span>
-                    </div>
-                    <div class="metric-item">
-                        <span class="metric-value">&lt;50ms</span>
-                        <span class="metric-label">WebSockets</span>
-                    </div>
-                    <div class="metric-item">
-                        <span class="metric-value">2.0</span>
-                        <span class="metric-label">Gemini AI</span>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mosaic-stage" aria-label="Mosaico 3D de capturas da Artemis 2.0">
+            <!-- Parede em Mosaico 3D com Colunas Animadas em Direções Opostas -->
+            <section class="mosaic-stage" aria-label="Mosaico 3D de capturas da Artemis 2.0" id="mosaicStage">
                 <div class="mosaic-wall">
-                    <!-- Coluna 1 -->
+                    <!-- Coluna 1 (Desce continuamente) -->
                     <div class="mosaic-col">
-                        <article class="tile tile-extra" data-index="4">
-                            <div class="tile-chrome">
-                                <div class="tile-dots"><span></span><span></span><span></span></div>
-                                <span class="tile-title">Geração de Ideias</span>
-                            </div>
-                            <div class="tile-media">
-                                <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
-                                    loading="lazy">
-                            </div>
-                        </article>
+                        <div class="mosaic-col-track col-down">
+                            <!-- Bloco A (5 telas) -->
+                            <article class="tile" data-index="4">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Geração de Ideias</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
+                                        loading="lazy">
+                                </div>
+                            </article>
 
-                        <article class="tile" data-index="0">
-                            <div class="tile-chrome">
-                                <div class="tile-dots"><span></span><span></span><span></span></div>
-                                <span class="tile-title">Tela Inicial</span>
-                            </div>
-                            <div class="tile-media">
-                                <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
-                                    loading="lazy">
-                            </div>
-                        </article>
+                            <article class="tile" data-index="0">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Tela Inicial</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
+                                        loading="lazy">
+                                </div>
+                            </article>
 
-                        <article class="tile tile-extra" data-index="1">
-                            <div class="tile-chrome">
-                                <div class="tile-dots"><span></span><span></span><span></span></div>
-                                <span class="tile-title">Sugestões Rápidas</span>
-                            </div>
-                            <div class="tile-media">
-                                <img src="images/artemis_sugestoes_rapidas.png" alt="Artemis 2.0 - Sugestões Rápidas"
-                                    loading="lazy">
-                            </div>
-                        </article>
+                            <article class="tile" data-index="1">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Sugestões Rápidas</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_sugestoes_rapidas.png"
+                                        alt="Artemis 2.0 - Sugestões Rápidas" loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="3">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Resposta em Tempo Real</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_tempo_real.png"
+                                        alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="2">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Interação no Chat</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <!-- Bloco B (cópia contínua para loop infinito sem pulo) -->
+                            <article class="tile" data-index="4" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Geração de Ideias</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="0" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Tela Inicial</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="1" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Sugestões Rápidas</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_sugestoes_rapidas.png"
+                                        alt="Artemis 2.0 - Sugestões Rápidas" loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="3" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Resposta em Tempo Real</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_tempo_real.png"
+                                        alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="2" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Interação no Chat</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
+                                        loading="lazy">
+                                </div>
+                            </article>
+                        </div>
                     </div>
 
-                    <!-- Coluna 2 (deslocada verticalmente) -->
-                    <div class="mosaic-col col-middle">
-                        <article class="tile" data-index="2">
-                            <div class="tile-chrome">
-                                <div class="tile-dots"><span></span><span></span><span></span></div>
-                                <span class="tile-title">Interação no Chat</span>
-                            </div>
-                            <div class="tile-media">
-                                <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
-                                    loading="lazy">
-                            </div>
-                        </article>
+                    <!-- Coluna 2 (Sobe continuamente) -->
+                    <div class="mosaic-col">
+                        <div class="mosaic-col-track col-up">
+                            <!-- Bloco A (5 telas) -->
+                            <article class="tile" data-index="2">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Interação no Chat</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
+                                        loading="lazy">
+                                </div>
+                            </article>
 
-                        <article class="tile" data-index="3">
-                            <div class="tile-chrome">
-                                <div class="tile-dots"><span></span><span></span><span></span></div>
-                                <span class="tile-title">Resposta em Tempo Real</span>
-                            </div>
-                            <div class="tile-media">
-                                <img src="images/artemis_resposta_tempo_real.png"
-                                    alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
-                            </div>
-                        </article>
+                            <article class="tile" data-index="3">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Resposta em Tempo Real</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_tempo_real.png"
+                                        alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
+                                </div>
+                            </article>
 
-                        <article class="tile tile-extra" data-index="0">
-                            <div class="tile-chrome">
-                                <div class="tile-dots"><span></span><span></span><span></span></div>
-                                <span class="tile-title">Tela Inicial</span>
-                            </div>
-                            <div class="tile-media">
-                                <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
-                                    loading="lazy">
-                            </div>
-                        </article>
+                            <article class="tile" data-index="0">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Tela Inicial</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="4">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Geração de Ideias</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="1">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Sugestões Rápidas</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_sugestoes_rapidas.png"
+                                        alt="Artemis 2.0 - Sugestões Rápidas" loading="lazy">
+                                </div>
+                            </article>
+
+                            <!-- Bloco B -->
+                            <article class="tile" data-index="2" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Interação no Chat</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="3" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Resposta em Tempo Real</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_tempo_real.png"
+                                        alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="0" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Tela Inicial</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="4" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Geração de Ideias</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="1" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Sugestões Rápidas</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_sugestoes_rapidas.png"
+                                        alt="Artemis 2.0 - Sugestões Rápidas" loading="lazy">
+                                </div>
+                            </article>
+                        </div>
                     </div>
 
-                    <!-- Coluna 3 -->
+                    <!-- Coluna 3 (Desce continuamente em cadência suave) -->
                     <div class="mosaic-col">
-                        <article class="tile" data-index="1">
-                            <div class="tile-chrome">
-                                <div class="tile-dots"><span></span><span></span><span></span></div>
-                                <span class="tile-title">Sugestões Rápidas</span>
-                            </div>
-                            <div class="tile-media">
-                                <img src="images/artemis_sugestoes_rapidas.png" alt="Artemis 2.0 - Sugestões Rápidas"
-                                    loading="lazy">
-                            </div>
-                        </article>
+                        <div class="mosaic-col-track col-down-slow">
+                            <!-- Bloco A (5 telas) -->
+                            <article class="tile" data-index="1">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Sugestões Rápidas</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_sugestoes_rapidas.png"
+                                        alt="Artemis 2.0 - Sugestões Rápidas" loading="lazy">
+                                </div>
+                            </article>
 
-                        <article class="tile" data-index="4">
-                            <div class="tile-chrome">
-                                <div class="tile-dots"><span></span><span></span><span></span></div>
-                                <span class="tile-title">Geração de Ideias</span>
-                            </div>
-                            <div class="tile-media">
-                                <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
-                                    loading="lazy">
-                            </div>
-                        </article>
+                            <article class="tile" data-index="4">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Geração de Ideias</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
+                                        loading="lazy">
+                                </div>
+                            </article>
 
-                        <article class="tile tile-extra" data-index="2">
-                            <div class="tile-chrome">
-                                <div class="tile-dots"><span></span><span></span><span></span></div>
-                                <span class="tile-title">Interação no Chat</span>
-                            </div>
-                            <div class="tile-media">
-                                <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
-                                    loading="lazy">
-                            </div>
-                        </article>
+                            <article class="tile" data-index="2">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Interação no Chat</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="0">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Tela Inicial</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="3">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Resposta em Tempo Real</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_tempo_real.png"
+                                        alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
+                                </div>
+                            </article>
+
+                            <!-- Bloco B -->
+                            <article class="tile" data-index="1" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Sugestões Rápidas</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_sugestoes_rapidas.png"
+                                        alt="Artemis 2.0 - Sugestões Rápidas" loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="4" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Geração de Ideias</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="2" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Interação no Chat</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="0" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Tela Inicial</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
+                                        loading="lazy">
+                                </div>
+                            </article>
+
+                            <article class="tile" data-index="3" aria-hidden="true">
+                                <div class="tile-chrome">
+                                    <div class="tile-dots"><span></span><span></span><span></span></div>
+                                    <span class="tile-title">Resposta em Tempo Real</span>
+                                </div>
+                                <div class="tile-media">
+                                    <img src="images/artemis_resposta_tempo_real.png"
+                                        alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
+                                </div>
+                            </article>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -921,6 +1360,8 @@
         ];
 
         const heroStage = document.getElementById('heroStage');
+        const gridCollapse = document.getElementById('gridCollapse');
+        const mosaicStage = document.getElementById('mosaicStage');
         const toggleViewBtn = document.getElementById('toggleViewBtn');
         const toggleViewLabel = document.getElementById('toggleViewLabel');
         const lightbox = document.getElementById('lightbox');
@@ -963,6 +1404,9 @@
 
         toggleViewBtn.addEventListener('click', () => {
             const isGrid = heroStage.classList.toggle('grid-view');
+            toggleViewBtn.setAttribute('aria-pressed', String(isGrid));
+            gridCollapse.setAttribute('aria-hidden', String(!isGrid));
+            mosaicStage.setAttribute('aria-hidden', String(isGrid));
             toggleViewLabel.textContent = isGrid
                 ? 'Voltar ao Mosaico 3D'
                 : 'Alternar Vista (3D / Grade)';
