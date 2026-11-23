@@ -348,6 +348,210 @@
             transform: translateY(-3px);
         }
 
+        /* About Me: Avatar + 3D Tech Mosaic Showcase */
+        .about-showcase {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 36px;
+            margin-top: 10px;
+        }
+
+        .about-avatar-wrap {
+            position: relative;
+            width: 195px;
+            height: 195px;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .about-avatar-circle {
+            position: absolute;
+            width: 195px;
+            height: 195px;
+            bottom: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(163, 230, 53, 0.15), rgba(59, 130, 246, 0.15));
+            border: 2px solid var(--verde-limao);
+            box-shadow: inset 0 0 20px rgba(163, 230, 53, 0.2), 0 15px 35px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .about-avatar-img {
+            position: relative;
+            z-index: 2;
+            width: 230px;
+            max-width: none;
+            object-fit: contain;
+            filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.7));
+            transform: translateY(14px);
+        }
+
+        .about-tech-mosaic {
+            flex: 1;
+            min-width: 0;
+            height: 270px;
+            perspective: 900px;
+            overflow: hidden;
+            position: relative;
+            border-radius: 12px;
+            background: radial-gradient(circle at center, rgba(163, 230, 53, 0.08) 0%, rgba(18, 18, 18, 0.45) 75%);
+            border: 1px solid rgba(163, 230, 53, 0.16);
+            box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+        }
+
+        .about-mosaic-wall {
+            display: grid;
+            grid-template-columns: repeat(3, 102px);
+            gap: 12px;
+            margin-top: -18px;
+            transform-origin: center 150px;
+            transform: rotateX(14deg) rotateY(-16deg) rotateZ(4deg);
+            transform-style: preserve-3d;
+            align-items: start;
+        }
+
+        .about-mosaic-col {
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .about-mosaic-col:hover {
+            z-index: 25;
+        }
+
+        .about-mosaic-track {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        @keyframes aboutScrollUp {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+            100% {
+                transform: translate3d(0, calc(-50% - 6px), 0);
+            }
+        }
+
+        @keyframes aboutScrollDown {
+            0% {
+                transform: translate3d(0, calc(-50% - 6px), 0);
+            }
+            100% {
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        .about-col-down {
+            animation: aboutScrollDown 24s linear infinite;
+        }
+
+        .about-col-up {
+            animation: aboutScrollUp 21s linear infinite;
+        }
+
+        .about-col-down-slow {
+            animation: aboutScrollDown 27s linear infinite;
+        }
+
+        .about-mosaic-col:hover .about-mosaic-track {
+            animation-play-state: paused;
+        }
+
+        .tech-tile {
+            background: linear-gradient(160deg, rgba(30, 30, 30, 0.92) 0%, rgba(18, 18, 18, 0.96) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
+            transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+            transform-style: preserve-3d;
+            cursor: default;
+        }
+
+        .tech-tile:hover {
+            transform: scale(1.08) translateZ(22px) translateY(-4px);
+            border-color: var(--verde-limao);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.85), 0 0 20px var(--verde-glow);
+            background: rgba(45, 45, 45, 0.96);
+            z-index: 20;
+        }
+
+        .tech-tile-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 7px;
+            background: rgba(12, 12, 12, 0.88);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            gap: 4px;
+        }
+
+        .tech-tile-dots {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            flex-shrink: 0;
+        }
+
+        .tech-tile-dots span {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+        }
+
+        .tech-tile-dots span:nth-child(1) { background: var(--verde-limao); }
+        .tech-tile-dots span:nth-child(2) { background: var(--ambar); }
+        .tech-tile-dots span:nth-child(3) { background: #64748b; }
+
+        .tech-tile-name {
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: var(--branco-gelo);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: 0.01em;
+        }
+
+        .tech-tile-img {
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background: radial-gradient(circle at center, rgba(163, 230, 53, 0.08) 0%, transparent 72%);
+        }
+
+        .tech-tile-img img,
+        .tech-tile-img svg {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+            transition: transform 0.25s ease;
+        }
+
+        .tech-tile:hover .tech-tile-img img,
+        .tech-tile:hover .tech-tile-img svg {
+            transform: scale(1.1);
+        }
+
         .cert-list {
             display: flex;
             flex-direction: column;
@@ -724,9 +928,12 @@
             pointer-events: auto;
         }
 
+        @media (max-width: 980px) {
+            .sobre-grid { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 768px) {
             #hero h1 { font-size: 2.8rem; }
-            .sobre-grid { grid-template-columns: 1fr; }
             .projetos-grid { grid-template-columns: 1fr; }
             .n8n-hero-card, .python-hero-card { padding: 24px 20px; }
             .tech-card-header { gap: 14px !important; margin-bottom: 18px !important; }
@@ -739,6 +946,27 @@
             .mobile-nav { display: flex; }
             .mobile-nav-overlay { display: block; }
             .btn-contato { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .about-showcase { gap: 14px; margin-bottom: 30px; }
+            .about-avatar-wrap { width: 130px; height: 130px; }
+            .about-avatar-circle { width: 130px; height: 130px; }
+            .about-avatar-img { width: 152px; transform: translateY(10px); }
+            .about-tech-mosaic { height: 215px; }
+            .about-mosaic-wall {
+                grid-template-columns: repeat(2, 86px);
+                gap: 10px;
+                margin-top: -12px;
+                transform-origin: center 118px;
+            }
+            .about-mosaic-col:nth-child(3) { display: none; }
+            .tech-tile-img { height: 54px; padding: 8px; }
+            .tech-tile-img img, .tech-tile-img svg { width: 32px; height: 32px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .about-mosaic-track { animation: none !important; }
         }
         /* Custom Cursor */
         .custom-cursor {
@@ -757,7 +985,7 @@
         @media (pointer: fine) {
             body { cursor: none; }
             .custom-cursor { display: block; }
-            a, button, .hover-target, .skill-tag, .cert-item, .projeto-card, .n8n-hero-card, .python-hero-card { cursor: none !important; }
+            a, button, .hover-target, .skill-tag, .cert-item, .projeto-card, .n8n-hero-card, .python-hero-card, .tech-tile { cursor: none !important; }
         }
         .custom-cursor.hover {
             width: 50px; height: 50px;
@@ -874,12 +1102,261 @@
         <h2 class="section-title reveal" data-i18n="about.title">About <span>Me</span></h2>
         <div class="sobre-grid">
             <div class="sobre-texto reveal-left">
-                <div style="display: flex; justify-content: center; margin-bottom: 50px; margin-top: 20px;">
-                    <div style="position: relative; width: 220px; height: 220px; display: flex; justify-content: center; align-items: flex-end;">
+                <div class="about-showcase">
+                    <div class="about-avatar-wrap">
                         <!-- Círculo de fundo estilo Pop-out (efeito 3D) -->
-                        <div style="position: absolute; width: 220px; height: 220px; bottom: 0; border-radius: 50%; background: linear-gradient(135deg, rgba(163, 230, 53, 0.15), rgba(59, 130, 246, 0.15)); border: 2px solid var(--verde-limao); box-shadow: inset 0 0 20px rgba(163, 230, 53, 0.2), 0 15px 35px rgba(0,0,0,0.5); z-index: 1;"></div>
+                        <div class="about-avatar-circle"></div>
                         <!-- Imagem PNG vazada saltando para fora -->
-                        <img src="images/profile.png" alt="Matheus" style="position: relative; z-index: 2; width: 260px; max-width: none; object-fit: contain; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.7)); transform: translateY(15px);">
+                        <img src="images/profile.png" alt="Matheus" class="about-avatar-img">
+                    </div>
+
+                    <!-- Mosaico 3D Animado com todas as tecnologias da stack -->
+                    <div class="about-tech-mosaic" aria-label="Mosaico 3D animado de tecnologias">
+                        <div class="about-mosaic-wall">
+                            <!-- Coluna 1 (Desce continuamente) -->
+                            <div class="about-mosaic-col">
+                                <div class="about-mosaic-track about-col-down">
+                                    <!-- Bloco A -->
+                                    <div class="tech-tile" title="Python">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Python</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" title="RAG Architecture">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">RAG</span></div>
+                                        <div class="tech-tile-img">
+                                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <ellipse cx="16" cy="14" rx="9" ry="4" stroke="#a3e635" stroke-width="2.5" fill="rgba(163,230,53,0.12)"/>
+                                                <path d="M7 14v10c0 2.2 4 4 9 4s9-1.8 9-4V14" stroke="#a3e635" stroke-width="2.5"/>
+                                                <path d="M7 19c0 2.2 4 4 9 4s9-1.8 9-4" stroke="#a3e635" stroke-width="2"/>
+                                                <circle cx="34" cy="31" r="7" stroke="#fbbf24" stroke-width="2.5" fill="rgba(251,191,36,0.15)"/>
+                                                <path d="M39 36l5 5" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="tech-tile" title="Node.js">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Node.js</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="Node.js" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" title="Docker">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Docker</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" title="Tailwind CSS">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Tailwind</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" alt="Tailwind CSS" loading="lazy"></div>
+                                    </div>
+                                    <!-- Bloco B (loop contínuo) -->
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Python</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">RAG</span></div>
+                                        <div class="tech-tile-img">
+                                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <ellipse cx="16" cy="14" rx="9" ry="4" stroke="#a3e635" stroke-width="2.5" fill="rgba(163,230,53,0.12)"/>
+                                                <path d="M7 14v10c0 2.2 4 4 9 4s9-1.8 9-4V14" stroke="#a3e635" stroke-width="2.5"/>
+                                                <path d="M7 19c0 2.2 4 4 9 4s9-1.8 9-4" stroke="#a3e635" stroke-width="2"/>
+                                                <circle cx="34" cy="31" r="7" stroke="#fbbf24" stroke-width="2.5" fill="rgba(251,191,36,0.15)"/>
+                                                <path d="M39 36l5 5" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Node.js</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Docker</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Tailwind</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" alt="" loading="lazy"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Coluna 2 (Sobe continuamente) -->
+                            <div class="about-mosaic-col">
+                                <div class="about-mosaic-track about-col-up">
+                                    <!-- Bloco A -->
+                                    <div class="tech-tile" title="n8n">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">n8n</span></div>
+                                        <div class="tech-tile-img">
+                                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="100" height="100" rx="22" fill="#ea4262"/>
+                                                <g stroke="white" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M 30 50 L 38 50"/>
+                                                    <path d="M 54 50 L 60 50 C 66 50, 66 36, 70 36"/>
+                                                    <path d="M 54 50 L 60 50 C 66 50, 66 64, 70 64"/>
+                                                    <circle cx="22" cy="50" r="8"/>
+                                                    <circle cx="46" cy="50" r="8"/>
+                                                    <circle cx="78" cy="36" r="8"/>
+                                                    <circle cx="78" cy="64" r="8"/>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="tech-tile" title="LangChain & LLMs">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">LangChain</span></div>
+                                        <div class="tech-tile-img">
+                                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="6" y="17" width="16" height="14" rx="7" stroke="#a3e635" stroke-width="3" fill="rgba(163,230,53,0.1)"/>
+                                                <rect x="26" y="17" width="16" height="14" rx="7" stroke="#fbbf24" stroke-width="3" fill="rgba(251,191,36,0.1)"/>
+                                                <path d="M19 24h10" stroke="#f8fafc" stroke-width="3" stroke-linecap="round"/>
+                                                <circle cx="24" cy="10" r="2.5" fill="#a3e635"/>
+                                                <circle cx="24" cy="38" r="2.5" fill="#fbbf24"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="tech-tile" title="React">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">React</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" title="Java">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Java</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" title="MySQL">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">MySQL</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="MySQL" loading="lazy"></div>
+                                    </div>
+                                    <!-- Bloco B (loop contínuo) -->
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">n8n</span></div>
+                                        <div class="tech-tile-img">
+                                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="100" height="100" rx="22" fill="#ea4262"/>
+                                                <g stroke="white" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M 30 50 L 38 50"/>
+                                                    <path d="M 54 50 L 60 50 C 66 50, 66 36, 70 36"/>
+                                                    <path d="M 54 50 L 60 50 C 66 50, 66 64, 70 64"/>
+                                                    <circle cx="22" cy="50" r="8"/>
+                                                    <circle cx="46" cy="50" r="8"/>
+                                                    <circle cx="78" cy="36" r="8"/>
+                                                    <circle cx="78" cy="64" r="8"/>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">LangChain</span></div>
+                                        <div class="tech-tile-img">
+                                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="6" y="17" width="16" height="14" rx="7" stroke="#a3e635" stroke-width="3" fill="rgba(163,230,53,0.1)"/>
+                                                <rect x="26" y="17" width="16" height="14" rx="7" stroke="#fbbf24" stroke-width="3" fill="rgba(251,191,36,0.1)"/>
+                                                <path d="M19 24h10" stroke="#f8fafc" stroke-width="3" stroke-linecap="round"/>
+                                                <circle cx="24" cy="10" r="2.5" fill="#a3e635"/>
+                                                <circle cx="24" cy="38" r="2.5" fill="#fbbf24"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">React</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Java</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">MySQL</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="" loading="lazy"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Coluna 3 (Desce continuamente) -->
+                            <div class="about-mosaic-col">
+                                <div class="about-mosaic-track about-col-down-slow">
+                                    <!-- Bloco A -->
+                                    <div class="tech-tile" title="LLM Chatbots & AI">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">LLM AI</span></div>
+                                        <div class="tech-tile-img">
+                                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="8" y="10" width="32" height="24" rx="7" stroke="#fbbf24" stroke-width="2.5" fill="rgba(251,191,36,0.1)"/>
+                                                <path d="M18 34l-4 7 9-7" stroke="#fbbf24" stroke-width="2.5" stroke-linejoin="round"/>
+                                                <circle cx="18" cy="22" r="2.5" fill="#a3e635"/>
+                                                <circle cx="24" cy="22" r="2.5" fill="#a3e635"/>
+                                                <circle cx="30" cy="22" r="2.5" fill="#a3e635"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="tech-tile" title="Spring Boot">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Spring Boot</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" alt="Spring Boot" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" title="Git">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Git</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="Git" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" title="Python">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Python</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" title="n8n">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">n8n</span></div>
+                                        <div class="tech-tile-img">
+                                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="100" height="100" rx="22" fill="#ea4262"/>
+                                                <g stroke="white" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M 30 50 L 38 50"/>
+                                                    <path d="M 54 50 L 60 50 C 66 50, 66 36, 70 36"/>
+                                                    <path d="M 54 50 L 60 50 C 66 50, 66 64, 70 64"/>
+                                                    <circle cx="22" cy="50" r="8"/>
+                                                    <circle cx="46" cy="50" r="8"/>
+                                                    <circle cx="78" cy="36" r="8"/>
+                                                    <circle cx="78" cy="64" r="8"/>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <!-- Bloco B (loop contínuo) -->
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">LLM AI</span></div>
+                                        <div class="tech-tile-img">
+                                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="8" y="10" width="32" height="24" rx="7" stroke="#fbbf24" stroke-width="2.5" fill="rgba(251,191,36,0.1)"/>
+                                                <path d="M18 34l-4 7 9-7" stroke="#fbbf24" stroke-width="2.5" stroke-linejoin="round"/>
+                                                <circle cx="18" cy="22" r="2.5" fill="#a3e635"/>
+                                                <circle cx="24" cy="22" r="2.5" fill="#a3e635"/>
+                                                <circle cx="30" cy="22" r="2.5" fill="#a3e635"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Spring Boot</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" alt="" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Git</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">Python</span></div>
+                                        <div class="tech-tile-img"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="" loading="lazy"></div>
+                                    </div>
+                                    <div class="tech-tile" aria-hidden="true">
+                                        <div class="tech-tile-bar"><div class="tech-tile-dots"><span></span><span></span><span></span></div><span class="tech-tile-name">n8n</span></div>
+                                        <div class="tech-tile-img">
+                                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="100" height="100" rx="22" fill="#ea4262"/>
+                                                <g stroke="white" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M 30 50 L 38 50"/>
+                                                    <path d="M 54 50 L 60 50 C 66 50, 66 36, 70 36"/>
+                                                    <path d="M 54 50 L 60 50 C 66 50, 66 64, 70 64"/>
+                                                    <circle cx="22" cy="50" r="8"/>
+                                                    <circle cx="46" cy="50" r="8"/>
+                                                    <circle cx="78" cy="36" r="8"/>
+                                                    <circle cx="78" cy="64" r="8"/>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="sobre-card">
@@ -1476,7 +1953,7 @@
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
-        document.querySelectorAll('a, button, .hover-target, .skill-tag, .cert-item, .projeto-card').forEach(el => {
+        document.querySelectorAll('a, button, .hover-target, .skill-tag, .cert-item, .projeto-card, .tech-tile').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
