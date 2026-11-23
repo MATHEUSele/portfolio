@@ -4,151 +4,532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artemis 2.0 - Galeria</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&display=swap"
+    <title>Artemis 2.0 - Galeria 3D</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-panel: rgba(15, 23, 42, 0.85);
+            --purple: #a855f7;
+            --blue: #3b82f6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-subtle: rgba(255, 255, 255, 0.14);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body,
         html {
             margin: 0;
             padding: 0;
             min-height: 100%;
             font-family: 'Inter Tight', sans-serif;
-            background-color: #0f172a;
+            background-color: var(--bg-dark);
             background-image: url('images/artemis_background.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: white;
+            color: var(--text-main);
+            overflow-x: hidden;
         }
 
-        .overlay {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+        .page-shell {
+            position: relative;
             min-height: 100vh;
-            padding: 60px 20px;
+            background: radial-gradient(circle at 75% 45%, rgba(15, 23, 42, 0.55) 0%, rgba(9, 13, 22, 0.92) 70%);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .header {
+        /* Top Navigation */
+        .top-nav {
+            position: relative;
+            z-index: 30;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-            gap: 20px;
+            padding: 20px 48px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(9, 13, 22, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            gap: 16px;
         }
 
-        h1 {
-            margin: 0;
-            font-size: 2.8rem;
-            background: linear-gradient(to right, #a855f7, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.8);
+        }
+
+        .brand-name {
+            font-size: 1.1rem;
             font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .brand-badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: rgba(168, 85, 247, 0.14);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            color: #d8b4fe;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .back-btn {
             display: inline-flex;
             align-items: center;
-            color: #a855f7;
+            gap: 8px;
+            color: #e2e8f0;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
-            background: rgba(15, 23, 42, 0.8);
-            padding: 12px 24px;
-            border-radius: 8px;
-            border: 1px solid rgba(168, 85, 247, 0.3);
+            font-size: 0.9rem;
+            transition: all 0.25s ease;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
         .back-btn:hover {
             background: rgba(168, 85, 247, 0.2);
-            transform: translateX(-5px);
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+            border-color: rgba(168, 85, 247, 0.6);
+            color: #ffffff;
+            transform: translateX(-3px);
         }
 
-        .back-btn svg {
-            margin-right: 8px;
+        /* Hero + 3D Mosaic Stage */
+        .hero-stage {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            min-height: calc(100vh - 76px);
+            overflow: hidden;
+            padding: 48px;
         }
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
+        /* Dark gradient behind left hero text */
+        .hero-backdrop-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg,
+                    rgba(9, 13, 22, 0.95) 0%,
+                    rgba(9, 13, 22, 0.85) 36%,
+                    rgba(9, 13, 22, 0.28) 65%,
+                    rgba(9, 13, 22, 0.15) 100%);
+            z-index: 10;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
         }
 
-        .image-card {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            height: 240px;
+        .hero-stage.grid-view {
+            flex-direction: column;
+            align-items: stretch;
+            overflow: visible;
+            gap: 40px;
+            padding-bottom: 80px;
+        }
+
+        .hero-stage.grid-view .hero-backdrop-gradient {
+            opacity: 0;
+        }
+
+        /* Left Hero Content */
+        .hero-content {
+            position: relative;
+            z-index: 20;
+            max-width: 540px;
+            pointer-events: none;
+        }
+
+        .hero-stage.grid-view .hero-content {
+            max-width: 1120px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            margin: 0 0 12px 0;
+            font-size: clamp(2.8rem, 5.2vw, 4.5rem);
+            line-height: 0.98;
+            letter-spacing: -0.03em;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .hero-subtitle {
+            display: block;
+            margin-top: 6px;
+            font-size: clamp(1.7rem, 3.2vw, 2.7rem);
+            line-height: 1.08;
+            font-weight: 600;
+            background: linear-gradient(95deg, #c084fc 0%, #60a5fa 60%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            margin: 24px 0 32px 0;
+            color: var(--text-muted);
+            font-size: 1.08rem;
+            line-height: 1.65;
+            max-width: 470px;
+        }
+
+        .hero-desc strong {
+            color: #f1f5f9;
+            font-weight: 600;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px;
+            pointer-events: auto;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 24px;
+            border-radius: 999px;
+            background: #ffffff;
+            color: #090d16;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 28px rgba(255, 255, 255, 0.22);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 22px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.72);
+            color: #e2e8f0;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: all 0.25s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(168, 85, 247, 0.7);
+            background: rgba(168, 85, 247, 0.18);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .hero-metrics {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 440px;
+        }
+
+        .metric-item {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            gap: 4px;
+        }
+
+        .metric-value {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+        }
+
+        .metric-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* 3D Tilted Mosaic Stage */
+        .mosaic-stage {
+            position: absolute;
+            top: -8%;
+            right: -6%;
+            bottom: -8%;
+            left: 34%;
+            perspective: 1400px;
+            display: flex;
             align-items: center;
-            color: #cbd5e1;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            justify-content: center;
+            z-index: 5;
+            overflow: visible;
+        }
+
+        .mosaic-wall {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(260px, 320px));
+            gap: 20px;
+            transform: rotateX(14deg) rotateY(-16deg) rotateZ(4deg);
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            padding: 20px;
+        }
+
+        .mosaic-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transform-style: preserve-3d;
+        }
+
+        /* Staggered middle column for authentic Herdr wall cadence */
+        .mosaic-col.col-middle {
+            transform: translateY(-40px);
+        }
+
+        /* Window Tile Card */
+        .tile {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
             overflow: hidden;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             cursor: pointer;
+            position: relative;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.65);
+            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.28s ease,
+                border-color 0.28s ease,
+                filter 0.28s ease;
+            transform-style: preserve-3d;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
-        .image-card:hover {
-            border-color: rgba(168, 85, 247, 0.6);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 85, 247, 0.25);
+        .tile:hover {
+            transform: scale(1.06) translateZ(28px) translateY(-6px);
+            border-color: rgba(168, 85, 247, 0.85);
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.85), 0 0 30px rgba(168, 85, 247, 0.4);
+            z-index: 20;
+            filter: brightness(1.08);
         }
 
-        .image-card img {
+        .tile-chrome {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(9, 13, 22, 0.82);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tile-dots {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tile-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .tile-dots span:nth-child(1) {
+            background: rgba(248, 113, 113, 0.7);
+        }
+
+        .tile-dots span:nth-child(2) {
+            background: rgba(251, 191, 36, 0.7);
+        }
+
+        .tile-dots span:nth-child(3) {
+            background: rgba(74, 222, 128, 0.7);
+        }
+
+        .tile-title {
+            font-size: 0.74rem;
+            font-weight: 500;
+            color: #cbd5e1;
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 190px;
+        }
+
+        .tile-media {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            overflow: hidden;
+            background: #020617;
+        }
+
+        .tile-media img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 12px;
+            display: block;
             transition: transform 0.35s ease;
         }
 
-        .image-card:hover img {
+        .tile:hover .tile-media img {
             transform: scale(1.03);
         }
 
-        /* Lightbox Modal */
+        /* Flat Grid View Toggle Mode */
+        .hero-stage.grid-view .mosaic-stage {
+            position: relative;
+            inset: auto;
+            perspective: none;
+            max-width: 1120px;
+            width: 100%;
+            margin: 0 auto;
+            z-index: 20;
+        }
+
+        .hero-stage.grid-view .mosaic-wall {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            width: 100%;
+            transform: none;
+            padding: 0;
+        }
+
+        .hero-stage.grid-view .mosaic-col {
+            display: contents;
+        }
+
+        .hero-stage.grid-view .mosaic-col.col-middle {
+            transform: none;
+        }
+
+        .hero-stage.grid-view .tile-extra {
+            display: none;
+        }
+
+        .hero-stage.grid-view .tile:hover {
+            transform: scale(1.04) translateY(-6px);
+        }
+
+        /* Bottom-right floating hint */
+        .click-hint {
+            position: fixed;
+            bottom: 22px;
+            right: 28px;
+            z-index: 25;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #cbd5e1;
+            background: rgba(9, 13, 22, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            padding: 8px 16px;
+            border-radius: 999px;
+            backdrop-filter: blur(10px);
+            pointer-events: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        }
+
+        /* Enhanced Lightbox Modal */
         .lightbox {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.88);
-            backdrop-filter: blur(8px);
+            background: rgba(5, 8, 15, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 2000;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 24px;
+            gap: 16px;
         }
 
         .lightbox.active {
             display: flex;
         }
 
-        .lightbox img {
-            max-width: 95%;
-            max-height: 90vh;
-            border-radius: 12px;
-            border: 1px solid rgba(168, 85, 247, 0.4);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        .lightbox-frame {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 92vw;
+            max-height: 82vh;
+        }
+
+        .lightbox-frame img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 14px;
+            border: 1px solid rgba(168, 85, 247, 0.45);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 40px rgba(168, 85, 247, 0.2);
             object-fit: contain;
+        }
+
+        .lightbox-caption {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #e2e8f0;
+            font-size: 0.98rem;
+            font-weight: 500;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 8px 18px;
+            border-radius: 999px;
+        }
+
+        .lightbox-counter {
+            color: #c084fc;
+            font-weight: 600;
+            font-size: 0.85rem;
         }
 
         .lightbox-close {
             position: fixed;
-            top: 24px;
-            right: 28px;
+            top: 22px;
+            right: 26px;
             background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(168, 85, 247, 0.4);
+            border: 1px solid rgba(168, 85, 247, 0.45);
             color: white;
             width: 44px;
             height: 44px;
@@ -158,47 +539,161 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
 
         .lightbox-close:hover {
-            background: rgba(168, 85, 247, 0.3);
+            background: rgba(168, 85, 247, 0.35);
+            transform: scale(1.06);
         }
 
-        @media (max-width: 768px) {
+        .lightbox-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 2010;
+        }
 
+        .lightbox-nav:hover {
+            background: rgba(168, 85, 247, 0.35);
+            border-color: rgba(168, 85, 247, 0.7);
+        }
+
+        .lightbox-prev {
+            left: 24px;
+        }
+
+        .lightbox-next {
+            right: 24px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1120px) {
+            .mosaic-stage {
+                left: 42%;
+            }
+
+            .mosaic-wall {
+                grid-template-columns: repeat(3, 240px);
+            }
+        }
+
+        @media (max-width: 900px) {
             body,
             html {
                 background-attachment: scroll;
             }
 
-            .overlay {
-                padding: 30px 16px;
+            .top-nav {
+                padding: 16px 20px;
             }
 
-            h1 {
-                font-size: 2rem;
+            .hero-stage {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 32px 20px 80px;
+                min-height: auto;
+                gap: 36px;
+                overflow: hidden;
             }
 
-            .gallery-grid {
+            .hero-backdrop-gradient {
+                background: linear-gradient(180deg,
+                        rgba(9, 13, 22, 0.92) 0%,
+                        rgba(9, 13, 22, 0.72) 45%,
+                        rgba(9, 13, 22, 0.35) 100%);
+            }
+
+            .hero-content {
+                max-width: 100%;
+                pointer-events: auto;
+            }
+
+            .hero-metrics {
+                margin-top: 28px;
+                gap: 24px;
+            }
+
+            .mosaic-stage {
+                position: relative;
+                inset: auto;
+                left: auto;
+                right: auto;
+                top: auto;
+                bottom: auto;
+                perspective: 1100px;
+                padding: 20px 0;
+            }
+
+            .mosaic-wall {
+                grid-template-columns: repeat(2, minmax(145px, 1fr));
+                gap: 14px;
+                transform: rotateX(10deg) rotateY(-8deg) rotateZ(2deg);
+                padding: 8px;
+                width: 100%;
+            }
+
+            .mosaic-col.col-middle {
+                transform: translateY(-16px);
+            }
+
+            .mosaic-col:nth-child(3) {
+                display: none;
+            }
+
+            .hero-stage.grid-view .mosaic-col:nth-child(3) {
+                display: contents;
+            }
+
+            .hero-stage.grid-view .mosaic-wall {
                 grid-template-columns: 1fr;
-                gap: 16px;
             }
 
-            .image-card {
-                height: 210px;
+            .click-hint {
+                bottom: 14px;
+                right: 16px;
+                font-size: 0.78rem;
+                padding: 6px 12px;
+            }
+
+            .lightbox-nav {
+                width: 38px;
+                height: 38px;
+            }
+
+            .lightbox-prev {
+                left: 10px;
+            }
+
+            .lightbox-next {
+                right: 10px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="overlay">
-        <div class="container">
-            <div class="header">
-                <h1>Artemis 2.0</h1>
+    <div class="page-shell">
+        <header class="top-nav">
+            <div class="brand">
+                <span class="brand-dot" aria-hidden="true"></span>
+                <span class="brand-name">Artemis 2.0</span>
+                <span class="brand-badge">WebSockets · Gemini AI</span>
+            </div>
+            <div class="nav-actions">
                 <a href="index.html#projetos" class="back-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <line x1="19" y1="12" x2="5" y2="12"></line>
                         <polyline points="12 19 5 12 12 5"></polyline>
@@ -206,46 +701,246 @@
                     Voltar ao Portfólio
                 </a>
             </div>
+        </header>
 
-            <p style="color: #cbd5e1; margin-bottom: 40px; font-size: 1.1rem; line-height: 1.6; max-width: 800px;">
-                Capturas de tela da interface e das funcionalidades em tempo real do assistente virtual <strong>Artemis
-                    2.0</strong>. Toque ou clique em qualquer imagem para ampliar.
-            </p>
+        <main class="hero-stage" id="heroStage">
+            <div class="hero-backdrop-gradient" aria-hidden="true"></div>
 
-            <div class="gallery-grid">
-                <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
-                    <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial" loading="lazy">
+            <section class="hero-content">
+                <h1 class="hero-title">
+                    Artemis 2.0
+                    <span class="hero-subtitle">Assistente Virtual IA em tempo real.</span>
+                </h1>
+
+                <p class="hero-desc">
+                    Arquitetura reconstruída do zero com React, Tailwind CSS, FastAPI e Google Gemini via WebSockets.
+                    <strong>Cada janela ao lado é a Artemis 2.0 em ação.</strong>
+                </p>
+
+                <div class="hero-actions">
+                    <a href="index.html#projetos" class="btn-primary">
+                        Voltar ao Portfólio
+                    </a>
+                    <button type="button" class="btn-secondary" id="toggleViewBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span id="toggleViewLabel">Alternar Vista (3D / Grade)</span>
+                    </button>
                 </div>
-                <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
-                    <img src="images/artemis_sugestoes_rapidas.png" alt="Artemis 2.0 - Sugestões Rápidas"
-                        loading="lazy">
+
+                <div class="hero-metrics">
+                    <div class="metric-item">
+                        <span class="metric-value">5</span>
+                        <span class="metric-label">Telas Reais</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">&lt;50ms</span>
+                        <span class="metric-label">WebSockets</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">2.0</span>
+                        <span class="metric-label">Gemini AI</span>
+                    </div>
                 </div>
-                <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
-                    <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat" loading="lazy">
+            </section>
+
+            <section class="mosaic-stage" aria-label="Mosaico 3D de capturas da Artemis 2.0">
+                <div class="mosaic-wall">
+                    <!-- Coluna 1 -->
+                    <div class="mosaic-col">
+                        <article class="tile tile-extra" data-index="4">
+                            <div class="tile-chrome">
+                                <div class="tile-dots"><span></span><span></span><span></span></div>
+                                <span class="tile-title">Geração de Ideias</span>
+                            </div>
+                            <div class="tile-media">
+                                <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
+                                    loading="lazy">
+                            </div>
+                        </article>
+
+                        <article class="tile" data-index="0">
+                            <div class="tile-chrome">
+                                <div class="tile-dots"><span></span><span></span><span></span></div>
+                                <span class="tile-title">Tela Inicial</span>
+                            </div>
+                            <div class="tile-media">
+                                <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
+                                    loading="lazy">
+                            </div>
+                        </article>
+
+                        <article class="tile tile-extra" data-index="1">
+                            <div class="tile-chrome">
+                                <div class="tile-dots"><span></span><span></span><span></span></div>
+                                <span class="tile-title">Sugestões Rápidas</span>
+                            </div>
+                            <div class="tile-media">
+                                <img src="images/artemis_sugestoes_rapidas.png" alt="Artemis 2.0 - Sugestões Rápidas"
+                                    loading="lazy">
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Coluna 2 (deslocada verticalmente) -->
+                    <div class="mosaic-col col-middle">
+                        <article class="tile" data-index="2">
+                            <div class="tile-chrome">
+                                <div class="tile-dots"><span></span><span></span><span></span></div>
+                                <span class="tile-title">Interação no Chat</span>
+                            </div>
+                            <div class="tile-media">
+                                <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
+                                    loading="lazy">
+                            </div>
+                        </article>
+
+                        <article class="tile" data-index="3">
+                            <div class="tile-chrome">
+                                <div class="tile-dots"><span></span><span></span><span></span></div>
+                                <span class="tile-title">Resposta em Tempo Real</span>
+                            </div>
+                            <div class="tile-media">
+                                <img src="images/artemis_resposta_tempo_real.png"
+                                    alt="Artemis 2.0 - Resposta em Tempo Real" loading="lazy">
+                            </div>
+                        </article>
+
+                        <article class="tile tile-extra" data-index="0">
+                            <div class="tile-chrome">
+                                <div class="tile-dots"><span></span><span></span><span></span></div>
+                                <span class="tile-title">Tela Inicial</span>
+                            </div>
+                            <div class="tile-media">
+                                <img src="images/artemis_tela_inicial.png" alt="Artemis 2.0 - Tela Inicial"
+                                    loading="lazy">
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Coluna 3 -->
+                    <div class="mosaic-col">
+                        <article class="tile" data-index="1">
+                            <div class="tile-chrome">
+                                <div class="tile-dots"><span></span><span></span><span></span></div>
+                                <span class="tile-title">Sugestões Rápidas</span>
+                            </div>
+                            <div class="tile-media">
+                                <img src="images/artemis_sugestoes_rapidas.png" alt="Artemis 2.0 - Sugestões Rápidas"
+                                    loading="lazy">
+                            </div>
+                        </article>
+
+                        <article class="tile" data-index="4">
+                            <div class="tile-chrome">
+                                <div class="tile-dots"><span></span><span></span><span></span></div>
+                                <span class="tile-title">Geração de Ideias</span>
+                            </div>
+                            <div class="tile-media">
+                                <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias"
+                                    loading="lazy">
+                            </div>
+                        </article>
+
+                        <article class="tile tile-extra" data-index="2">
+                            <div class="tile-chrome">
+                                <div class="tile-dots"><span></span><span></span><span></span></div>
+                                <span class="tile-title">Interação no Chat</span>
+                            </div>
+                            <div class="tile-media">
+                                <img src="images/artemis_chat_saudacao.png" alt="Artemis 2.0 - Interação no Chat"
+                                    loading="lazy">
+                            </div>
+                        </article>
+                    </div>
                 </div>
-                <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
-                    <img src="images/artemis_resposta_tempo_real.png" alt="Artemis 2.0 - Resposta em Tempo Real"
-                        loading="lazy">
-                </div>
-                <div class="image-card" onclick="openLightbox(this.querySelector('img').src)">
-                    <img src="images/artemis_resposta_ideias.png" alt="Artemis 2.0 - Geração de Ideias" loading="lazy">
-                </div>
-            </div>
+            </section>
+        </main>
+
+        <div class="click-hint">Clique em qualquer janela para ampliar &rarr;</div>
+    </div>
+
+    <!-- Lightbox Modal com navegação -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()" role="dialog" aria-modal="true"
+        aria-label="Visualização ampliada">
+        <button class="lightbox-close" type="button" aria-label="Fechar" onclick="closeLightbox()">&times;</button>
+
+        <button class="lightbox-nav lightbox-prev" type="button" aria-label="Imagem anterior"
+            onclick="event.stopPropagation(); navigateLightbox(-1)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+
+        <div class="lightbox-frame" onclick="event.stopPropagation()">
+            <img id="lightboxImg" src="" alt="Imagem Ampliada">
+        </div>
+
+        <button class="lightbox-nav lightbox-next" type="button" aria-label="Próxima imagem"
+            onclick="event.stopPropagation(); navigateLightbox(1)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+
+        <div class="lightbox-caption" onclick="event.stopPropagation()">
+            <span class="lightbox-counter" id="lightboxCounter">1 / 5</span>
+            <span id="lightboxTitle">Artemis 2.0 - Tela Inicial</span>
         </div>
     </div>
 
-    <!-- Lightbox para ampliar a imagem ao clicar -->
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-        <button class="lightbox-close" aria-label="Fechar">&times;</button>
-        <img id="lightboxImg" src="" alt="Imagem Ampliada" onclick="event.stopPropagation()">
-    </div>
-
     <script>
+        const slides = [
+            {
+                src: 'images/artemis_tela_inicial.png',
+                title: 'Artemis 2.0 — Tela Inicial'
+            },
+            {
+                src: 'images/artemis_sugestoes_rapidas.png',
+                title: 'Artemis 2.0 — Sugestões Rápidas'
+            },
+            {
+                src: 'images/artemis_chat_saudacao.png',
+                title: 'Artemis 2.0 — Interação no Chat'
+            },
+            {
+                src: 'images/artemis_resposta_tempo_real.png',
+                title: 'Artemis 2.0 — Resposta em Tempo Real'
+            },
+            {
+                src: 'images/artemis_resposta_ideias.png',
+                title: 'Artemis 2.0 — Geração de Ideias'
+            }
+        ];
+
+        const heroStage = document.getElementById('heroStage');
+        const toggleViewBtn = document.getElementById('toggleViewBtn');
+        const toggleViewLabel = document.getElementById('toggleViewLabel');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxTitle = document.getElementById('lightboxTitle');
+        const lightboxCounter = document.getElementById('lightboxCounter');
 
-        function openLightbox(src) {
-            lightboxImg.src = src;
+        let currentSlideIndex = 0;
+
+        function renderSlide(index) {
+            currentSlideIndex = (index + slides.length) % slides.length;
+            const slide = slides[currentSlideIndex];
+            lightboxImg.src = slide.src;
+            lightboxImg.alt = slide.title;
+            lightboxTitle.textContent = slide.title;
+            lightboxCounter.textContent = `${currentSlideIndex + 1} / ${slides.length}`;
+        }
+
+        function openLightbox(index) {
+            renderSlide(index);
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -255,8 +950,29 @@
             document.body.style.overflow = '';
         }
 
+        function navigateLightbox(delta) {
+            renderSlide(currentSlideIndex + delta);
+        }
+
+        document.querySelectorAll('.tile').forEach((tile) => {
+            tile.addEventListener('click', () => {
+                const idx = Number(tile.dataset.index || 0);
+                openLightbox(idx);
+            });
+        });
+
+        toggleViewBtn.addEventListener('click', () => {
+            const isGrid = heroStage.classList.toggle('grid-view');
+            toggleViewLabel.textContent = isGrid
+                ? 'Voltar ao Mosaico 3D'
+                : 'Alternar Vista (3D / Grade)';
+        });
+
         document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
             if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigateLightbox(-1);
+            if (e.key === 'ArrowRight') navigateLightbox(1);
         });
     </script>
 </body>
