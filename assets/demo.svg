@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 340" width="820" height="340" role="img" aria-label="portfolio — deploy e preview local">
+  <style>
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; }
+    .cmd { fill: #f8fafc; font-weight: 700; }
+    .prompt { fill: #a3e635; font-weight: 700; }
+    .muted { fill: #94a3b8; }
+    .ok { fill: #a3e635; font-weight: 600; }
+    .warn { fill: #fbbf24; font-weight: 600; }
+
+    @keyframes step1 { 0%, 4% { opacity: 0; } 8%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes step2 { 0%, 16% { opacity: 0; } 20%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes step3 { 0%, 34% { opacity: 0; } 38%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes step4 { 0%, 50% { opacity: 0; } 54%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes step5 { 0%, 66% { opacity: 0; } 70%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes step6 { 0%, 78% { opacity: 0; } 82%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+    .s1 { animation: step1 11s infinite; }
+    .s2 { animation: step2 11s infinite; }
+    .s3 { animation: step3 11s infinite; }
+    .s4 { animation: step4 11s infinite; }
+    .s5 { animation: step5 11s infinite; }
+    .s6 { animation: step6 11s infinite; }
+    .cursor { animation: blink 1s infinite; }
+  </style>
+
+  <!-- Janela de terminal escura na paleta grafite -->
+  <rect width="820" height="340" rx="14" fill="#121212" stroke="#2d2d2d" stroke-width="1.5"/>
+  <path d="M0 14 Q0 0 14 0 L806 0 Q820 0 820 14 L820 40 L0 40 Z" fill="#1e1e1e"/>
+
+  <!-- 3 bolinhas da barra superior -->
+  <circle cx="24" cy="20" r="6" fill="#EF4444"/>
+  <circle cx="44" cy="20" r="6" fill="#fbbf24"/>
+  <circle cx="64" cy="20" r="6" fill="#a3e635"/>
+  <text x="410" y="25" text-anchor="middle" class="mono muted" font-size="12">portfolio — deploy &amp; local preview</text>
+
+  <!-- Bloco 1 -->
+  <g class="s1">
+    <text x="26" y="74" class="mono"><tspan class="prompt">❯ </tspan><tspan class="cmd">git clone https://github.com/MATHEUSele/portfolio.git</tspan></text>
+  </g>
+  <g class="s2">
+    <text x="44" y="98" class="mono muted">index.html • artemis.html • python.html • whatsapp.html</text>
+    <text x="44" y="120" class="mono muted">images/ (16 assets) • certificados/ (7 PDFs) • deploy.yml</text>
+  </g>
+
+  <!-- Bloco 2 -->
+  <g class="s3">
+    <text x="26" y="158" class="mono"><tspan class="prompt">❯ </tspan><tspan class="cmd">python -m http.server 8000</tspan></text>
+  </g>
+  <g class="s4">
+    <text x="44" y="182" class="mono warn">Serving HTTP on 0.0.0.0 port 8000 (http://localhost:8000/)</text>
+    <text x="44" y="204" class="mono ok">✓ Landing i18n (PT/EN), Mosaicos 3D &amp; Demos interativas ativas</text>
+  </g>
+
+  <!-- Bloco 3 -->
+  <g class="s5">
+    <text x="26" y="242" class="mono"><tspan class="prompt">❯ </tspan><tspan class="cmd">git push origin main</tspan></text>
+  </g>
+  <g class="s6">
+    <text x="44" y="266" class="mono ok">✓ GitHub Pages (deploy.yml) -&gt; matheusele.github.io/portfolio/</text>
+    <text x="26" y="302" class="mono"><tspan class="prompt">❯ </tspan><tspan class="muted">Abrir https://matheusele.github.io/portfolio/ </tspan><tspan class="cursor prompt">█</tspan></text>
+  </g>
+</svg>
